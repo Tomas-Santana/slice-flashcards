@@ -1,20 +1,20 @@
 import build from "../../../lib/build";
 
 export default class HomePage extends HTMLElement {
-   constructor(props: any) {
-      super();
-      window.slice.attachTemplate(this);
+  constructor(props: any) {
+    super();
+    window.slice.attachTemplate(this);
 
-      window.slice.controller.setComponentProps(this, props);
-   }
+    window.slice.controller.setComponentProps(this, props);
+  }
 
-   async init() {
+  async init() {
+    const demoComponent = await build("Demo", {
+      exampleProp: "Hello from HomePage",
+    });
 
-      const demoComponent = await window.slice.build('Demo', { exampleProp: 'Hello from HomePage' });
-
-      this.appendChild(demoComponent);
-   }
-   
+    this.appendChild(demoComponent);
+  }
 }
 
-customElements.define('slice-home-page', HomePage);
+customElements.define("slice-home-page", HomePage);
