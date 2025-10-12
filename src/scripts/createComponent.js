@@ -2,6 +2,7 @@
 // Create a Visual component (TypeScript) with a props interface, plus regenerate components.gen.ts
 import fs from "fs";
 import path from "path";
+import components from "../Components/components.js";
 
 const root = path.resolve(process.cwd());
 const SRC = path.join(root, "src");
@@ -46,26 +47,21 @@ function createVisualComponent(componentInputName) {
   const cssPath = path.join(dir, `${className}.css`);
   const htmlPath = path.join(dir, `${className}.html`);
 
-  const typesContent =
-    `export interface ${className}Props {
-	// TODO: declare strongly-typed props for ${className}
-}
+  const elementTag = `slice-${lower}`;
 
-export type ${className}Tag = ` +
-    "`slice-" +
-    lower +
-    "`" +
-    `;
+  const typesContent = `export interface ${className}Props {}
 `;
 
   const tsContent = `import type { ${className}Props } from './${className}.types';
+import {defineComponent} from '../../../lib/defineComponent';
+
 
 export default class ${className} extends HTMLElement {
 	static props = {
 		// Define your component props here (runtime schema)
 	};
 
-	constructor(props?: Partial<${className}Props>) {
+	constructor(props: ${className}Props) {
 		super();
 		// @ts-ignore slice is provided by the framework at runtime
 		slice.attachTemplate(this);
@@ -88,41 +84,25 @@ customElements.define('slice-${lower}', ${className});
   const cssContent = `/* Styles for ${className} component */\n`;
   const htmlContent = `<div class="${lower}">\n  ${className}\n</div>\n`;
 
+  // write to components object if not present
+  if (!components[className]) {
+    components[className] = "Visual";
+    const compLines = [];
+    compLines.push("const components = {");
+    for (const [key, value] of Object.entries(components)) {
+      compLines.push(`  "${key}": "${value}",`);
+    }
+    compLines.push("};");
+    const compContent = compLines.join("\n") + "\nexport default components;\n";
+    writeFileSafe(path.join(COMPONENTS_ROOT, "components.js"), compContent);
+  }
+
   writeFileSafe(typesPath, typesContent);
   writeFileSafe(tsPath, tsContent);
   writeFileSafe(cssPath, cssContent);
   writeFileSafe(htmlPath, htmlContent);
 
   return { dir, className, tsPath, typesPath };
-}
-
-function findMostRecentlyCreatedComponent() {
-  // Search Visual and Service folders for a single JS file just created by CLI
-  const candidateDirs = [];
-  for (const typeDir of ["Visual", "Service", "AppComponents"]) {
-    const base = path.join(COMPONENTS_ROOT, typeDir);
-    if (!fs.existsSync(base)) continue;
-    for (const child of fs.readdirSync(base)) {
-      const full = path.join(base, child);
-      if (fs.statSync(full).isDirectory()) {
-        // component folder expected to contain <Name>.js
-        const jsFile = path.join(full, `${child}.js`);
-        if (fs.existsSync(jsFile)) {
-          candidateDirs.push({
-            dir: full,
-            jsFile,
-            mtime: fs.statSync(jsFile).mtimeMs,
-            typeDir,
-            name: child,
-          });
-        }
-      }
-    }
-  }
-
-  if (!candidateDirs.length) return null;
-  candidateDirs.sort((a, b) => b.mtime - a.mtime);
-  return candidateDirs[0];
 }
 
 function ensureTsForComponent(info) {
@@ -196,8 +176,10 @@ function generateComponentsGen(entries) {
   // Build types for name -> props (type-only imports, no runtime imports)
   const lines = [];
   const typeImports = [];
+  const classTypeImports = [];
   const nameLits = [];
   const propsMapEntries = [];
+  const instanceMapEntries = [];
 
   for (const e of entries) {
     const typeRel = e.typesPath
@@ -207,18 +189,30 @@ function generateComponentsGen(entries) {
           .replace(/\\/g, "/")
           .replace(/\.[tj]sx?$/, "")
       : null;
+    const classRel =
+      e.filePath && /\.(ts|tsx)$/.test(e.filePath)
+        ? "./" +
+          path
+            .relative(SRC, e.filePath)
+            .replace(/\\/g, "/")
+            .replace(/\.[tj]sx?$/, "")
+        : null;
     const importName = e.name;
     if (typeRel)
       typeImports.push(`import type { ${importName}Props } from '${typeRel}';`);
+    if (classRel)
+      classTypeImports.push(`import type ${importName} from '${classRel}';`);
     nameLits.push(`'${e.name}'`);
     propsMapEntries.push(
       `  '${e.name}': ${typeRel ? `${importName}Props` : "any"}`
     );
+    instanceMapEntries.push(`  '${e.name}': ${classRel ? importName : "any"}`);
   }
 
   lines.push("// AUTO-GENERATED FILE. Do not edit manually.");
   lines.push("// Updated by src/scripts/createComponent.js");
   if (typeImports.length) lines.push(...typeImports);
+  if (classTypeImports.length) lines.push(...classTypeImports);
   lines.push("");
   lines.push(
     `export type ComponentName = ${
@@ -229,6 +223,12 @@ function generateComponentsGen(entries) {
   lines.push("export type ComponentPropsMap = {");
   if (propsMapEntries.length) {
     lines.push(propsMapEntries.join(",\n"));
+  }
+  lines.push("};");
+  lines.push("");
+  lines.push("export type ComponentInstanceMap = {");
+  if (instanceMapEntries.length) {
+    lines.push(instanceMapEntries.join(",\n"));
   }
   lines.push("};");
   lines.push("");
@@ -246,9 +246,10 @@ function main() {
       const created = createVisualComponent(argName);
       console.log(`[slice generator] Created TS component at ${created.dir}`);
     } else {
-      // Legacy compatibility: if invoked without args, try to convert the most recent JS component to TS
-      const comp = findMostRecentlyCreatedComponent();
-      if (comp) ensureTsForComponent(comp);
+      // No creation; still regenerate types for existing components
+      console.log(
+        "[slice generator] No component name provided — regenerating types only"
+      );
     }
 
     const all = collectAllComponents();

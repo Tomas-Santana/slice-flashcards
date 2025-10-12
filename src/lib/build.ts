@@ -1,5 +1,9 @@
-// Typed build wrapper around window.slice.build with name and props inference
-import type { ComponentName, ComponentPropsMap } from "../components.gen";
+// Typed build wrapper around window.slice.build with name/props and return type inference
+import type {
+  ComponentName,
+  ComponentPropsMap,
+  ComponentInstanceMap,
+} from "../components.gen";
 
 declare global {
   interface Window {
@@ -7,7 +11,7 @@ declare global {
   }
 }
 
-type BuildReturn<C extends ComponentName> = Promise<any>; // Could be refined if needed
+type BuildReturn<C extends ComponentName> = Promise<ComponentInstanceMap[C]>;
 
 export default async function build<C extends ComponentName>(
   name: C,
