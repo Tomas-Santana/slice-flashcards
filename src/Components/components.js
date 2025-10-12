@@ -1,5 +1,3 @@
-// This file is auto-generated. Do not edit manually.
-// Updated by src/scripts/createComponent.js
 const components = {
   "HomePage": "AppComponents",
   "Playground": "AppComponents",

@@ -2,7 +2,6 @@
 // Updated by src/scripts/createComponent.js
 import type { DemoProps } from './Components/Visual/Demo/Demo.types';
 import type Demo from './Components/Visual/Demo/Demo';
-import type Demo2 from './Components/Visual/Demo2/Demo2';
 import type HomePage from './Components/AppComponents/HomePage/HomePage';
 
 export type ComponentName = 'Button' | 'Card' | 'Checkbox' | 'CodeVisualizer' | 'Demo' | 'Details' | 'DropDown' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'MultiRoute' | 'Navbar' | 'NotFound' | 'Route' | 'Select' | 'Switch' | 'TreeItem' | 'TreeView' | 'FetchManager' | 'IndexedDbManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'HomePage' | 'Playground';
