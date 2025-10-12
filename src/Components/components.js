@@ -1,3 +1,5 @@
+// This file is auto-generated. Do not edit manually.
+// Updated by src/scripts/createComponent.js
 const components = {
   "HomePage": "AppComponents",
   "Playground": "AppComponents",
@@ -24,5 +26,7 @@ const components = {
   "IndexedDbManager": "Service",
   "Link": "Service",
   "LocalStorageManager": "Service",
-  "Translator": "Service"
-}; export default components;
+  "Translator": "Service",
+  "Demo": "Visual",
+};
+export default components;
