@@ -31,15 +31,22 @@ app.use('/Slice/', express.static(path.join(__dirname, '..', 'node_modules', 'sl
 
 // Middleware para servir archivos estáticos
 // 1) Transpilar TypeScript on-the-fly cuando un .js no exista pero .ts sí exista
+const BASE_DIR = path.join(__dirname, `../${folderDeployed}`);
+function toFsPath(urlPath) {
+  // Asegurar ruta relativa dentro de BASE_DIR
+  const rel = (urlPath || '').replace(/^\/+/, '');
+  return path.join(BASE_DIR, rel);
+}
+
 app.get(/.*\.js$/, async (req, res, next) => {
   try {
     const reqPath = decodeURIComponent(req.path);
-    const jsFsPath = path.join(__dirname, `../${folderDeployed}`, reqPath);
+    const jsFsPath = toFsPath(reqPath);
     // Si el .js existe, continuar al static handler
     if (await fileExists(jsFsPath)) return next();
 
     // Probar con .ts equivalente
-    const tsFsPath = jsFsPath.replace(/\.js$/, '.ts');
+  const tsFsPath = jsFsPath.replace(/\.js$/, '.ts');
     if (!(await fileExists(tsFsPath))) return next();
 
     const source = await fsReadFile(tsFsPath, 'utf8');
@@ -63,7 +70,7 @@ app.get(/.*\.js$/, async (req, res, next) => {
 app.get(/.*\.ts$/, async (req, res, next) => {
   try {
     const reqPath = decodeURIComponent(req.path);
-    const tsFsPath = path.join(__dirname, `../${folderDeployed}`, reqPath);
+    const tsFsPath = toFsPath(reqPath);
     if (!(await fileExists(tsFsPath))) return next();
     const source = await fsReadFile(tsFsPath, 'utf8');
     const result = await transform(source, {
@@ -78,6 +85,37 @@ app.get(/.*\.ts$/, async (req, res, next) => {
     return res.send(result.code);
   } catch (err) {
     console.error('TypeScript transform error:', err);
+    return next();
+  }
+});
+
+// 3) Resolver peticiones sin extensión: intentar .js, luego .ts->js
+app.get(/^(?!.*\.[a-zA-Z0-9]+$).+/, async (req, res, next) => {
+  try {
+    const reqPath = decodeURIComponent(req.path);
+    const jsFsPath = toFsPath(reqPath + '.js');
+    if (await fileExists(jsFsPath)) {
+      // Dejar que el static middleware lo sirva
+      req.url = req.path + '.js';
+      return next();
+    }
+    const tsFsPath = toFsPath(reqPath + '.ts');
+    if (await fileExists(tsFsPath)) {
+      const source = await fsReadFile(tsFsPath, 'utf8');
+      const result = await transform(source, {
+        loader: 'ts',
+        format: 'esm',
+        target: 'es2020',
+        sourcemap: 'inline',
+        sourcefile: path.basename(tsFsPath)
+      });
+      res.setHeader('Content-Type', 'application/javascript');
+      res.setHeader('Cache-Control', 'no-store');
+      return res.send(result.code);
+    }
+    return next();
+  } catch (err) {
+    console.error('Extensionless module resolve error:', err);
     return next();
   }
 });
