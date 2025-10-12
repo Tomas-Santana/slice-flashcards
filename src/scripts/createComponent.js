@@ -53,7 +53,6 @@ function createVisualComponent(componentInputName) {
 `;
 
   const tsContent = `import type { ${className}Props } from './${className}.types';
-import {defineComponent} from '../../../lib/defineComponent';
 
 
 export default class ${className} extends HTMLElement {
