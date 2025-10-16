@@ -13,7 +13,8 @@
     "slice:delete": "node node_modules/slicejs-cli/client.js component delete",
     "slice:get": "node node_modules/slicejs-cli/client.js get",
     "slice:browse": "node node_modules/slicejs-cli/client.js browse",
-    "slice:sync": "node node_modules/slicejs-cli/client.js sync"
+    "slice:sync": "node node_modules/slicejs-cli/client.js sync",
+    "run": "node api/index.js --development"
   },
   "keywords": [],
   "author": "",

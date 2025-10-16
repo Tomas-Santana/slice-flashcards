@@ -26,5 +26,6 @@ const components = {
   "LocalStorageManager": "Service",
   "Translator": "Service",
   "Demo": "Visual",
+  "StartupPage": "AppComponents",
 };
 export default components;
