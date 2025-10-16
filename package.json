@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "slice:init": "node node_modules/slicejs-cli/client.js init",
-    "slice:start": "node api/index.js --development",
+    "slice:start": "npx concurrently \"npx tailwindcss -i ./src/App/style.css -o ./src/out.css --watch\" \"node api/index.js --development\"",
     "slice:version": "node node_modules/slicejs-cli/client.js version",
     "slice:update": "node node_modules/slicejs-cli/client.js update",
     "slice:create": "node node_modules/slicejs-cli/client.js component create",
@@ -25,6 +25,11 @@
   },
   "dependencies": {
     "esbuild": "^0.25.10",
+    "idb": "^8.0.3",
     "slicejs-cli": "^2.3.3"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.18",
+    "concurrently": "^8.0.1"
   }
 }
