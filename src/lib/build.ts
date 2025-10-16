@@ -5,12 +5,6 @@ import type {
   ComponentInstanceMap,
 } from "../components.gen";
 
-declare global {
-  interface Window {
-    slice: any;
-  }
-}
-
 type BuildReturn<C extends ComponentName> = Promise<ComponentInstanceMap[C]>;
 
 export default async function build<C extends ComponentName>(
