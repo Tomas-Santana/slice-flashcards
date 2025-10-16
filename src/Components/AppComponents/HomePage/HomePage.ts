@@ -6,14 +6,10 @@ export default class HomePage extends HTMLElement {
     window.slice.attachTemplate(this);
 
     window.slice.controller.setComponentProps(this, props);
+    window.slice.setTheme("light");
   }
 
   async init() {
-    const demoComponent = await build("Demo", {
-      exampleProp: "Hello from HomePage",
-    });
-
-    this.appendChild(demoComponent);
   }
 }
 
