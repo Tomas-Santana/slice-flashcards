@@ -1,10 +1,8 @@
-import type { EpochMs } from "./common";
 
 export interface AudioAsset {
-  id?: number; 
-  cardId?: number; 
+  id: number; 
   blob: Blob;
   mimeType: string; 
   durationSec?: number;
-  createdAt: EpochMs;
+  createdAt: Date;
 }

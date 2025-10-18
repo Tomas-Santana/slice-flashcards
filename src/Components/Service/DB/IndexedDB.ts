@@ -1,5 +1,6 @@
 import * as idb from "idb";
 import { StoreModel, StoreName } from "./modelMap";
+import { LanguageCode } from "./models/common";
 
 export class IndexedDBService {
   private dbPromise: Promise<idb.IDBPDatabase>;
@@ -46,12 +47,12 @@ export class IndexedDBService {
     return db.get(storeName, key) as any;
   }
 
-  async add<T>(storeName: StoreName, value: T): Promise<IDBValidKey> {
+  async add<T extends StoreModel<S>, S extends StoreName>(storeName: S, value: T): Promise<IDBValidKey> {
     const db = await this.dbPromise;
     return db.add(storeName, value as any);
   }
 
-  async put<T>(storeName: StoreName, value: T): Promise<IDBValidKey> {
+  async put<T extends StoreModel<S>, S extends StoreName>(storeName: S, value: T): Promise<IDBValidKey> {
     const db = await this.dbPromise;
     return db.put(storeName, value as any);
   }
@@ -90,5 +91,20 @@ export class IndexedDBService {
     const result = await idx.get(query as any);
     await tx.done;
     return result as any;
+  }
+
+  async createLanguageIndex(languageCode: LanguageCode): Promise<void> {
+    const db = await this.dbPromise;
+    const storeName = "cards";
+    const indexName = `by_translation_${languageCode}`;
+
+    if (!db.objectStoreNames.contains(storeName)) {
+      throw new Error(`Object store ${storeName} does not exist`);
+    }
+
+    const s = db.transaction(storeName, "versionchange").objectStore(storeName);
+    if (!s.indexNames.contains(indexName)) {
+      s.createIndex(indexName, `translation.${languageCode}`, { unique: false });
+    }
   }
 }

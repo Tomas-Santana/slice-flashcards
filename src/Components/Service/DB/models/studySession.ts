@@ -1,12 +1,11 @@
-import type { EpochMs, StudyMode } from "./common";
+import type { StudyMode } from "./common";
 
 export interface StudySession {
-  id?: number;
+  id: number;
   mode: StudyMode;
   timed: boolean;
   deckId?: number;
-  categoryFilter?: string;
-  startedAt: EpochMs;
-  endedAt?: EpochMs;
+  startedAt: Date;
+  endedAt?: Date;
   cardsStudied: number;
 }

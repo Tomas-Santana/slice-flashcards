@@ -1,10 +1,8 @@
-import type { EpochMs, LanguageCode } from './common';
+import type { LanguageCode } from '@/lib/types/languages';
 
 export interface Settings {
   id: 'settings'; 
   baseLanguage: LanguageCode;
-  targetLanguage: LanguageCode;
+  selectedLanguage: LanguageCode;
   languages: LanguageCode[];
-  createdAt: EpochMs;
-  updatedAt: EpochMs;
 }

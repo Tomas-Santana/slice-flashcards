@@ -1,33 +1,27 @@
 import type {
-  EpochMs,
-  PersonalDifficulty,
-  LanguageCode,
+  DifficultyBand,
 } from "./common";
+import type { LanguageCode } from '@/lib/types/languages';
 
 // A single flashcard entity
 export interface Card {
-  id?: number;
-
+  id: number;
   deckIds: number[];
-  targetText: string;
-  baseTranslation: string;
-  exampleSentence?: string;
+  originalText: string;
+  translation: Record<LanguageCode, string>;
+  exampleSentence?: Record<LanguageCode, string>;
   notes?: string;
 
-  baseLanguage: LanguageCode; 
-  targetLanguage: LanguageCode; 
+  difficulty: DifficultyBand;
 
-  topic?: string[]; 
-  personalDifficulty?: PersonalDifficulty;
+  audioAssetId?: Record<LanguageCode, number>; // audio per language
 
-  audioAssetId?: number;
+  progressScore?: Record<LanguageCode, number>; // 0..1 for dashboard progress
 
-  progressScore?: number; // 0..1 for dashboard progress
-
-  repetitions?: number; // successful reviews in a row
-  lastReviewedAt?: EpochMs;
+  repetitions?: Record<LanguageCode, number>; // successful reviews in a row
+  lastReviewedAt?: Record<LanguageCode, Date>;
 
   // Timestamps
-  createdAt: EpochMs;
-  updatedAt: EpochMs;
+  createdAt: Date;
+  updatedAt: Date;
 }

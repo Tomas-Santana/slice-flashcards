@@ -26,8 +26,7 @@ export function upgrade(
       autoIncrement: true,
     });
     s.createIndex("by_name", "name", { unique: false });
-    s.createIndex("by_topic", "topic", { unique: false, multiEntry: true });
-    s.createIndex("by_level", "level", { unique: false });
+    s.createIndex("by_difficulty", "difficulty", { unique: false });
     s.createIndex("by_createdAt", "createdAt", { unique: false });
   }
 
@@ -40,12 +39,10 @@ export function upgrade(
 
     s.createIndex("by_deckIds", "deckIds", { unique: false, multiEntry: true });
     s.createIndex("by_status", "status", { unique: false });
-    s.createIndex("by_topic", "topic", { unique: false, multiEntry: true });
-    s.createIndex("by_personalDifficulty", "personalDifficulty", {
+    s.createIndex("by_difficulty", "difficulty", {
       unique: false,
     });
-    s.createIndex("by_targetText", "targetText", { unique: false });
-    s.createIndex("by_baseTranslation", "baseTranslation", { unique: false });
+    s.createIndex("by_originalText", "originalText", { unique: false });
     s.createIndex("by_createdAt", "createdAt", { unique: false });
   }
 
