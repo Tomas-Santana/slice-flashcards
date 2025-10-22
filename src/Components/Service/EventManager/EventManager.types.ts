@@ -26,6 +26,8 @@ export interface AppEventMap {
 
   // Audio upload/ready
   "audio:added": { audioId: number; cardId?: number };
+
+  "sidebar:toggle": {};
 }
 
 export type EventName = keyof AppEventMap;
