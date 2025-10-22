@@ -28,7 +28,7 @@ function writeFileSafe(filePath, content) {
   fs.writeFileSync(filePath, content, "utf8");
 }
 
-function createVisualComponent(componentInputName) {
+function createVisualComponent(componentInputName, componentType = "Visual") {
   if (!validateName(componentInputName)) {
     throw new Error(
       `Invalid component name '${componentInputName}'. Use PascalCase or letters+digits starting with a letter (e.g., Button, NavBar).`
@@ -36,7 +36,7 @@ function createVisualComponent(componentInputName) {
   }
 
   const className = toClassName(componentInputName);
-  const dir = path.join(COMPONENTS_ROOT, "Visual", className);
+  const dir = path.join(COMPONENTS_ROOT, componentType, className);
   if (fs.existsSync(dir)) {
     throw new Error(`Component directory already exists: ${dir}`);
   }
@@ -85,7 +85,7 @@ customElements.define('slice-${lower}', ${className});
 
   // write to components object if not present
   if (!components[className]) {
-    components[className] = "Visual";
+    components[className] = componentType;
     const compLines = [];
     compLines.push("const components = {");
     for (const [key, value] of Object.entries(components)) {
@@ -240,9 +240,15 @@ function generateComponentsGen(entries) {
 function main() {
   try {
     const argName = process.argv[2];
+    const componentType = process.argv[3]; // currently unused
+    if (componentType && (componentType !== "Visual" && componentType !== "AppComponents")) {
+      throw new Error(
+        `Unsupported component type '${componentType}'. Only 'Visual' and 'AppComponents' are supported for creation.`
+      );
+    }
     if (argName) {
       // Standalone generation path: create a Visual component in TS directly
-      const created = createVisualComponent(argName);
+      const created = createVisualComponent(argName, componentType);
       console.log(`[slice generator] Created TS component at ${created.dir}`);
     } else {
       // No creation; still regenerate types for existing components
