@@ -1,6 +1,6 @@
 import * as idb from "idb";
 import { StoreModel, StoreName } from "./modelMap";
-import { LanguageCode } from "./models/common";
+import { LanguageCode } from "../../../lib/types/languages";
 
 export class IndexedDBService {
   private dbPromise: Promise<idb.IDBPDatabase>;
