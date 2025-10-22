@@ -6,6 +6,8 @@ export default {
       colors: {
         "font-primary": "var(--font-primary-color)",
         "font-secondary": "var(--font-secondary-color)",
+        // Common border color token used by classes like `border-border`
+        border: "var(--medium-color)",
         primary: "var(--primary-color)",
         "primary-rgb": "var(--primary-color-rgb)",
         "primary-contrast": "var(--primary-color-contrast)",
