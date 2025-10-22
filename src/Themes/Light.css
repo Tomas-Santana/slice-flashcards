@@ -1,5 +1,6 @@
 :root {
-  --font-primary-color: #000;
+  /* Near-black for comfortable reading on light backgrounds */
+  --font-primary-color: #111111; /* was #000 */
   --font-secondary-color: #474747;
   /** primary **/
   --primary-color: #0066ff;
