@@ -27,5 +27,6 @@ const components = {
   "Translator": "Service",
   "StartPage": "AppComponents",
   "Logo": "Visual",
+  "Sidebar": "Visual",
 };
 export default components;
