@@ -9,5 +9,6 @@ export interface ButtonProps
    icon?: {
       name: string;
       iconStyle?: string;
+      size?: "small" | "medium" | "large";
    };
 }
