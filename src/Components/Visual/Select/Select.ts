@@ -1,4 +1,22 @@
+import { SelectProps } from "./Select.types";
+
 export default class Select extends HTMLElement {
+
+   private _options: any[] = [];
+   private _value: any[] = [];
+   private _label: string = ''
+   private _multiple: boolean = false;
+   private _disabled: boolean = false
+   private _visibleProp: string = 'text';
+   private _onOptionSelect: ((option: any) => Promise<void>) | null = null;
+   
+   private $dropdown: HTMLElement | null = null
+   private $selectContainer: HTMLElement | null = null
+   private $label: HTMLElement | null = null
+   private $select: HTMLInputElement | null = null
+   private $menu: HTMLElement | null = null
+   private $caret: HTMLElement | null = null
+
 
    static props = {
       options: { 
@@ -30,9 +48,9 @@ export default class Select extends HTMLElement {
       }
    };
 
-   constructor(props) {
+   constructor(props: SelectProps<any>) {
       super();
-      slice.attachTemplate(this);
+      window.slice.attachTemplate(this);
       this.$dropdown = this.querySelector('.slice_select_dropdown');
       this.$selectContainer = this.querySelector('.slice_select_container');
       this.$label = this.querySelector('.slice_select_label');
@@ -51,7 +69,7 @@ export default class Select extends HTMLElement {
 
       this._value = [];
 
-      slice.controller.setComponentProps(this, props);
+      window.slice.controller.setComponentProps(this, props);
    }
 
    init() {
@@ -112,7 +130,7 @@ export default class Select extends HTMLElement {
             if (this._value.length === 1 && !this.multiple) {
                this.removeOptionFromValue(this._value[0]);
                this.addSelectedOption(option);
-               if (this.onOptionSelect) await this.onOptionSelect();
+               if (this.onOptionSelect) await this.onOptionSelect(option);
                return;
             }
 
@@ -123,7 +141,7 @@ export default class Select extends HTMLElement {
                this.addSelectedOption(option);
                opt.classList.add('active');
             }
-            if (this.onOptionSelect) await this.onOptionSelect();
+            if (this.onOptionSelect) await this.onOptionSelect(option);
          });
          this.$menu.appendChild(opt);
       });
@@ -140,7 +158,8 @@ export default class Select extends HTMLElement {
       this._value = [];
 
       if (valueParam.length > 1 && !this.multiple) {
-         return console.error('Select is not multiple, you can only select one option');
+         console.error('Select is not multiple, you can only select one option');
+         return;
       }
 
       const validOptions = valueParam.every((option) => this.isObjectInArray(option, this._options).found);
