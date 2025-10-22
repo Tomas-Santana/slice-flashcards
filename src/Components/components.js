@@ -28,5 +28,7 @@ const components = {
   "StartPage": "AppComponents",
   "Logo": "Visual",
   "Sidebar": "Visual",
+  "SidebarToggle": "Visual",
+  "SidebarLink": "Visual",
 };
 export default components;
