@@ -1,8 +1,6 @@
 .slice_select_dropdown {
   font-family: var(--font-family);
   max-width: 100%;
-  margin-bottom: 25px;
-  margin-top: 25px;
   position: relative;
 }
 .slice_select_container {
@@ -63,8 +61,6 @@
 .menu_open {
   display: block;
   overflow-y: scroll;
-  min-height: min-content;
-  max-height: 400%;
   visibility: visible;
   opacity: 1;
 }
