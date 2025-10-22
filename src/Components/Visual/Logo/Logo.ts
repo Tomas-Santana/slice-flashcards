@@ -7,14 +7,14 @@ export default class Logo extends HTMLElement {
 	};
 
 	$logoParagraph: HTMLParagraphElement | null = null;
-	classMap: Record<string, string> = {
-		small: "text-sm",
-		medium: "text-md",
-		large: "text-lg",
-		xl: "text-xl",
-		"2xl": "text-2xl",
+	sizeMap: Record<string, string> = {
+		small: "0.875rem",
+		medium: "1rem",
+		large: "1.125rem",
+		xl: "1.25rem",
+		"2xl": "1.5rem",
 	};
-	_props: LogoProps = {};
+	props: LogoProps = {};
 
 	constructor({
 		size = "medium",
@@ -25,16 +25,17 @@ export default class Logo extends HTMLElement {
 		window.slice.attachTemplate(this);
 		// @ts-ignore controller at runtime
 		window.slice.controller.setComponentProps(this, { size, textColor });
+		this.props = { size, textColor };
 	}
 
 	init() {
 		// Component initialization logic (can be async)
 		this.$logoParagraph = this.querySelector('p');
 		if (this.$logoParagraph) {
-			const sizeClass = this.classMap[(this as any)._props.size || 'text-md'];
-			this.$logoParagraph.classList.add(sizeClass);
-			if ((this as any)._props.textColor) {
-				this.$logoParagraph.style.color = (this as any)._props.textColor;
+			const size = this.sizeMap[(this as any).props.size || '1rem'];
+			this.$logoParagraph.style.fontSize = size;
+			if ((this as any).props.textColor) {
+				this.$logoParagraph.style.color = (this as any).props.textColor;
 			}
 		}
 	}
