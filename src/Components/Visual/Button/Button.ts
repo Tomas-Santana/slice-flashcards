@@ -1,3 +1,5 @@
+import type { ButtonProps } from "./Button.types";
+
 export default class Button extends HTMLElement {
 
    static props = {
@@ -19,10 +21,18 @@ export default class Button extends HTMLElement {
          default: null 
       }
    };
+   $value: HTMLLabelElement;
+   $button: HTMLButtonElement;
+   $container: HTMLDivElement;
+   onClickCallback: () => Promise<void> | void;
+   $icon: any;
+   _icon: any;
+   _value: any;
+   _customColor: any;
 
-   constructor(props) {
+   constructor(props: ButtonProps) {
       super();
-      slice.attachTemplate(this);
+      window.slice.attachTemplate(this);
       this.$value = this.querySelector('.slice_button_value');
       this.$button = this.querySelector('.slice_button');
       this.$container = this.querySelector('.slice_button_container');
@@ -32,12 +42,12 @@ export default class Button extends HTMLElement {
          this.$container.addEventListener('click', async () => await this.onClickCallback());
       }
 
-      slice.controller.setComponentProps(this, props);
+      window.slice.controller.setComponentProps(this, props);
    }
 
    async init() {
       if (this.icon) {
-         this.$icon = await slice.build('Icon', {
+         this.$icon = await window.slice.build('Icon', {
             name: this.icon.name,           // ✅ CORREGIDO: usar this.icon.name
             iconStyle: this.icon.iconStyle, // ✅ AÑADIDO: pasar también iconStyle
             size: '20px',
