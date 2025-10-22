@@ -35,7 +35,8 @@ const BASE_DIR = path.join(__dirname, `../${folderDeployed}`);
 function toFsPath(urlPath) {
   // Asegurar ruta relativa dentro de BASE_DIR
   const rel = (urlPath || '').replace(/^\/+/, '');
-  return path.join(BASE_DIR, rel);
+  const normalized = rel.startsWith('src/') ? rel.slice(4) : rel;
+  return path.join(BASE_DIR, normalized);
 }
 
 app.get(/.*\.js$/, async (req, res, next) => {
@@ -120,6 +121,7 @@ app.get(/^(?!.*\.[a-zA-Z0-9]+$).+/, async (req, res, next) => {
   }
 });
 
+app.use('/src', express.static(BASE_DIR));
 app.use(express.static(path.join(__dirname, `../${folderDeployed}`)));
 
 // Middleware para parsear JSON y formularios
