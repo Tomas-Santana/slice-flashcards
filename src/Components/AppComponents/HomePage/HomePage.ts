@@ -3,8 +3,8 @@ import { html } from "@/lib/render";
 const sidebarRoutes = [
   { name: "Practicar", path: "/" },
   { name: "Mis cartas y mazos", path: "/flashcards" },
-  { name: "Configuración", path: "/settings" }
-]
+  { name: "Configuración", path: "/settings" },
+];
 
 export default class HomePage extends HTMLElement {
   constructor(props: any) {
@@ -31,22 +31,29 @@ export default class HomePage extends HTMLElement {
       header: sidebarLogo,
     });
     const sidebarToggle = await window.slice.build("SidebarToggle", {
-      label: "→",
-    }); 
+      iconName: "bars",
+    });
+
+    const multiRoute = await window.slice.build("MultiRoute", {
+      routes: [
+        {
+          path: "/",
+          component: "PracticePage",
+        },
+        {
+          path: "/flashcards",
+          component: "FlashcardsPage",
+        }
+      ],
+    });
 
     return html`
       <div class="flex flex-col gap-2">
-        ${sidebar}
-        ${sidebarToggle}
-        <div class="flex flex-col items-center justify-center h-screen">
-          <div class="w-full h-12 bg-blue-500">
-            <h1 class="text-white text-center pt-3">Hello</h1>
-          </div>
-          <div class="w-24"></div>
-        </div>
+        ${sidebar} 
+        ${sidebarToggle} 
+        ${multiRoute}
       </div>
     `;
-    
   }
 }
 
