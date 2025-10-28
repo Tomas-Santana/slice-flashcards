@@ -7,9 +7,10 @@ export default class SidebarLink extends HTMLElement {
     // Define your component props here (runtime schema)
   };
 
-  _props: SidebarLinkProps = {
+  props: SidebarLinkProps = {
     href: "",
     label: "",
+    onClick: () => {},
   };
   constructor(props: SidebarLinkProps) {
     super();
@@ -18,7 +19,7 @@ export default class SidebarLink extends HTMLElement {
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
 
-		this._props = props;
+		this.props = props;
   }
 
   async init() {
@@ -34,9 +35,9 @@ export default class SidebarLink extends HTMLElement {
     const fragment = html`
       <a
         class="w-full block px-4 py-2 text-font-primary hover:bg-gray-200 rounded"
-        href="${this._props.href}"
+        href="${this.props.href}"
       >
-        ${this._props.label}
+        ${this.props.label}
       </a>
     `;
 
@@ -44,9 +45,8 @@ export default class SidebarLink extends HTMLElement {
     if (anchor) {
       anchor.addEventListener("click", (e) => {
         e.preventDefault();
-        eventManager.publish("sidebar:toggle", {
-          isOpen: false,
-        });
+        window.slice.router.navigate(this.props.href || "/");
+        this.props.onClick();
       });
     }
     

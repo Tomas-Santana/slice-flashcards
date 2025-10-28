@@ -65,13 +65,18 @@ export default class Sidebar extends HTMLElement {
         window.slice.build("SidebarLink", {
           label: route.name,
           href: route.path,
+          onClick: () => {
+            this.navigate(route.path);
+            eventManager.publish("sidebar:toggle", {
+              isOpen: false,
+            });
+          },
         })
       )
     );
     const sidebarToggle = await window.slice.build("SidebarToggle", {
-      label: "←",
+      iconName: "x",
     });
-
     return html`
       <aside
         class="fixed top-0 left-0 h-full w-64 bg-white border-r border-border shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-50"
