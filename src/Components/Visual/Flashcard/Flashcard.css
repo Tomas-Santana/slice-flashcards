@@ -1,0 +1,23 @@
+/* Styles for Flashcard component */
+
+.fc-outer {
+  perspective: 1000px;
+}
+
+.fc-inner {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 300ms ease;
+}
+
+.fc-inner.fc-flipped {
+  transform: rotateY(180deg);
+}
+
+.fc-face {
+  backface-visibility: hidden;
+}
+
+.fc-back {
+  transform: rotateY(180deg);
+}
