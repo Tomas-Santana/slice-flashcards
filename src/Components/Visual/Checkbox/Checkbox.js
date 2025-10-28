@@ -20,6 +20,10 @@ export default class Checkbox extends HTMLElement {
       customColor: { 
          type: 'string', 
          default: null 
+      },
+      onChange: { 
+         type: 'function', 
+         default: null 
       }
    };
 
@@ -61,6 +65,9 @@ export default class Checkbox extends HTMLElement {
       // Set up change listener
       this.$input.addEventListener('change', (e) => {
          this.checked = e.target.checked;
+         if (this.onChange) {
+            this.onChange(this.checked);
+         }
       });
    }
 
