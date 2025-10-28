@@ -20,13 +20,14 @@ export default class SButton extends HTMLElement {
 	};
 	props: SButtonProps;
 	_selected: boolean = false;
+	$button: HTMLButtonElement | null = null;
 
 	constructor(props: SButtonProps) {
 		super();
 		// @ts-ignore slice is provided by the framework at runtime
 		slice.attachTemplate(this);
 		// @ts-ignore controller at runtime
-		slice.controller.setComponentProps(this, props);
+		// slice.controller.setComponentProps(this, props);
 
 		this.props = props;
 
@@ -36,6 +37,8 @@ export default class SButton extends HTMLElement {
 		// Component initialization logic (can be async)
 		const fragment = this.getTemplate();
 		this.appendChild(fragment);
+
+		this.$button = this.querySelector('button');
 
 
 	}
@@ -62,6 +65,25 @@ export default class SButton extends HTMLElement {
 		}
 
 		return frag;
+	}
+
+	set disabled (value: boolean) {
+		const button = this.$button;
+		if (button) {
+			button.disabled = value;
+		}
+	}
+
+	set content (value: string | HTMLElement) {
+		const button = this.$button;
+		if (button) {
+			button.innerHTML = '';
+			if (typeof value === 'string') {
+				button.innerHTML = value;
+			} else {
+				button.appendChild(value);
+			}
+		}
 	}
 
 
