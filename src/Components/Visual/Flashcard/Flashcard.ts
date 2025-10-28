@@ -96,7 +96,7 @@ export default class Flashcard extends HTMLElement {
         <div class="fc-inner rounded shadow border bg-white">
           <div class="fc-face fc-front p-8 flex flex-col">
             <div class="text-2xl font-semibold text-font-primary">
-              ${translation}
+              ${translation} ${card.difficulty ? html`<span class="ml-2 text-sm px-2 py-1 rounded bg-primary-shade text-font-secondary">${card.difficulty}</span>` : ''}
             </div>
             ${example
               ? html`<div class="mt-2 text-base text-font-secondary italic">
