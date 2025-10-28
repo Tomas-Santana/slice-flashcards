@@ -15,7 +15,7 @@ export default class SidebarToggle extends HTMLElement {
     slice.attachTemplate(this);
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
-    this.props = { label: "Menu", ...props };
+    this.props = { iconName: "Bars", ...props };
     this.$container = this.querySelector(
       ".sidebar-toggle-root"
     ) as HTMLElement | null;
@@ -35,11 +35,16 @@ export default class SidebarToggle extends HTMLElement {
     if (!this.$container) return;
     this.$container.innerHTML = "";
 
-    const label = this.props.label ?? ">";
-
-    const button = await window.slice.build("Button", {
-      value: label,
-      onClickCallback: () => {
+    const sidebarIcon = await window.slice.build("SIcon", {
+      name: this.props.iconName,
+      class: "w-5 h-5",
+      style: "solid",
+    });
+    const button = await window.slice.build("SButton", {
+      variant: "ghost",
+      size: "icon",
+      content: sidebarIcon,
+      onClick: () => {
         eventManager.publish("sidebar:toggle", {});
       },
     });
