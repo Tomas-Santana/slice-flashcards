@@ -98,16 +98,14 @@ export default class NewCardModal extends HTMLElement {
       singleSelect: true,
       label: "Nivel de dificultad",
     });
-
-    const fileInput = await window.slice.build("FileInput", {
-      onFileSelect: (file: File) => {
-        // Handle file selection
+    const audioCombo = await window.slice.build("CardAudioCombo", {
+      onAudioChange: (audioBlob: Blob | null, mimeType?: string) => {
+        
       },
-      accept: ".png,.jpg,.jpeg",
-      multiple: false,
-      disabled: false,
+
     });
 
+    
     const createButton = await window.slice.build("Button", {
       value: "Crear carta",
       onClickCallback: () => {
@@ -127,7 +125,8 @@ export default class NewCardModal extends HTMLElement {
         </div>
         <div class="w-full">${notesInput}</div>
         <div class="w-full">${difficultySelect}</div>
-        <div class="w-full">${fileInput}</div>
+        <div class="w-full">${audioCombo}</div>
+        
         ${createButton}
       </div>
     `;
