@@ -28,6 +28,8 @@ export interface AppEventMap {
   "audio:added": { audioId: number; cardId?: number };
 
   "sidebar:toggle": {};
+
+  "modal:newCard:open": { cardId: number | null }
 }
 
 export type EventName = keyof AppEventMap;
