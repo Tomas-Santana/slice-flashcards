@@ -141,7 +141,6 @@ export function html(
     null
   );
 
-  // Collect comment nodes first to avoid traversal issues when mutating the tree
   const commentNodes: Comment[] = [];
   while (walker.nextNode()) {
     const node = walker.currentNode as Comment;
@@ -173,7 +172,6 @@ export function html(
       continue;
     }
 
-    // Insert all nodes before the marker, then remove the marker comment
     for (const node of nodes) {
       parent.insertBefore(node, commentNode);
     }
