@@ -3,7 +3,6 @@
 import type { ButtonProps } from './Components/Visual/Button/Button.types';
 import type { DeckCardProps } from './Components/Visual/DeckCard/DeckCard.types';
 import type { DialogProps } from './Components/Visual/Dialog/Dialog.types';
-import type { EditCardModalProps } from './Components/Visual/EditCardModal/EditCardModal.types';
 import type { FlashcardProps } from './Components/Visual/Flashcard/Flashcard.types';
 import type { InputProps } from './Components/Visual/Input/Input.types';
 import type { LogoProps } from './Components/Visual/Logo/Logo.types';
@@ -24,7 +23,6 @@ import type { StartPageProps } from './Components/AppComponents/StartPage/StartP
 import type Button from './Components/Visual/Button/Button';
 import type DeckCard from './Components/Visual/DeckCard/DeckCard';
 import type Dialog from './Components/Visual/Dialog/Dialog';
-import type EditCardModal from './Components/Visual/EditCardModal/EditCardModal';
 import type Flashcard from './Components/Visual/Flashcard/Flashcard';
 import type Input from './Components/Visual/Input/Input';
 import type Logo from './Components/Visual/Logo/Logo';
@@ -44,7 +42,7 @@ import type HomePage from './Components/AppComponents/HomePage/HomePage';
 import type PracticePage from './Components/AppComponents/PracticePage/PracticePage';
 import type StartPage from './Components/AppComponents/StartPage/StartPage';
 
-export type ComponentName = 'Button' | 'Card' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'Details' | 'Dialog' | 'DropDown' | 'EditCardModal' | 'Flashcard' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NotFound' | 'PageTitle' | 'Route' | 'SButton' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'StartPracticeModal' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage';
+export type ComponentName = 'Button' | 'Card' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'Details' | 'Dialog' | 'DropDown' | 'Flashcard' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NotFound' | 'PageTitle' | 'Route' | 'SButton' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'StartPracticeModal' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage';
 
 export type ComponentPropsMap = {
   'Button': ButtonProps,
@@ -55,7 +53,6 @@ export type ComponentPropsMap = {
   'Details': any,
   'Dialog': DialogProps,
   'DropDown': any,
-  'EditCardModal': EditCardModalProps,
   'Flashcard': FlashcardProps,
   'Grid': any,
   'Icon': any,
@@ -100,7 +97,6 @@ export type ComponentInstanceMap = {
   'Details': any,
   'Dialog': Dialog,
   'DropDown': any,
-  'EditCardModal': EditCardModal,
   'Flashcard': Flashcard,
   'Grid': any,
   'Icon': any,
