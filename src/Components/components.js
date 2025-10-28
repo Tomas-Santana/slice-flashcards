@@ -30,5 +30,16 @@ const components = {
   "Sidebar": "Visual",
   "SidebarToggle": "Visual",
   "SidebarLink": "Visual",
+  "PracticePage": "AppComponents",
+  "FlashcardsPage": "AppComponents",
+  "PageTitle": "Visual",
+  "DeckCard": "Visual",
+  "StartPracticeModal": "Visual",
+  "Dialog": "Visual",
+  "NewCardModal": "Visual",
+  "Flashcard": "Visual",
+  "Selectable": "Visual",
+  "SButton": "Visual",
+  "SIcon": "Visual",
 };
 export default components;
