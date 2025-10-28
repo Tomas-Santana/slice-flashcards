@@ -41,5 +41,8 @@ const components = {
   "Selectable": "Visual",
   "SButton": "Visual",
   "SIcon": "Visual",
+  "SButtonSelect": "Visual",
+  "SToggleButton": "Visual",
+  "FileInput": "Visual",
 };
 export default components;
