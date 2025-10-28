@@ -5,6 +5,7 @@
 
   /** primary **/
   --primary-color: #0066ff;
+  --primary-color-accent: #3399ff;
   --primary-color-rgb: rgb(0, 102, 255);
   /* Se reemplaza el negro puro por un gris muy oscuro, más cálido y agradable */
   --primary-background-color: #282828; /* antes: #000 */
@@ -14,6 +15,7 @@
 
   /** secondary **/
   --secondary-color: #63ccfd;
+  --secondary-color-accent: #99d6ff;
   --secondary-color-rgb: rgb(99, 204, 253);
   /* Se aclara el fondo secundario para suavizar el efecto general */
   --secondary-background-color: #333333; /* antes: #222 */
@@ -33,6 +35,7 @@
 
   /** danger **/
   --danger-color: #ff0000;
+  --danger-color-accent: #ff8a80;
   --danger-contrast: #000;
 
   /** medium **/

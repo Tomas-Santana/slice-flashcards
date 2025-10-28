@@ -4,12 +4,14 @@
   --font-secondary-color: #474747;
   /** primary **/
   --primary-color: #0066ff;
+  --primary-color-accent: #3399ff;
   --primary-color-rgb: rgb(0, 102, 255);
   --primary-background-color: #f1f0f0;
   --primary-color-contrast: #fff;
   --primary-color-shade: #ddd;
   /** secondary **/
   --secondary-color: #63ccfd;
+  --secondary-color-accent: #99d6ff;
   --secondary-color-rgb: rgb(99, 204, 253);
   --secondary-background-color: #ddd;
   --secondary-color-contrast: #fff;
@@ -23,6 +25,7 @@
   --warning-contrast: #000;
   /** danger **/
   --danger-color: #ff0000;
+  --danger-color-accent: #ff8a80;
   --danger-contrast: #fff;
   /** medium **/
   --medium-color: #92949c;

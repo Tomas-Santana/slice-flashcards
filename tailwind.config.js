@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/App/style.css", "./src/**/Components/**/*.{js,ts,html}"],
+  // Broaden content globs so all template literals/classes are picked up
+  content: ["./src/**/*.{html,js,ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -13,11 +14,13 @@ export default {
         "primary-contrast": "var(--primary-color-contrast)",
         "primary-bg": "var(--primary-background-color)",
         "primary-shade": "var(--primary-color-shade)",
+        "primary-accent": "var(--primary-color-accent)",
 
         secondary: "var(--secondary-color)",
         "secondary-rgb": "var(--secondary-color-rgb)",
         "secondary-bg": "var(--secondary-background-color)",
         "secondary-contrast": "var(--secondary-color-contrast)",
+        "secondary-accent": "var(--secondary-color-accent)",
 
         tertiary: "var(--tertiary-background-color)",
 
@@ -29,6 +32,7 @@ export default {
 
         danger: "var(--danger-color)",
         "danger-contrast": "var(--danger-contrast)",
+        "danger-accent": "var(--danger-color-accent)",
 
         medium: "var(--medium-color)",
         "medium-contrast": "var(--medium-contrast)",
@@ -37,5 +41,7 @@ export default {
       },
     },
   },
+  // Ensure critical utilities are included even if a file gets missed during scanning
+  safelist: ["justify-between", "aspect-square"],
   plugins: [],
 };
