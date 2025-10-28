@@ -19,6 +19,7 @@ export default class SButton extends HTMLElement {
 		// Define your component props here (runtime schema)
 	};
 	props: SButtonProps;
+	_selected: boolean = false;
 
 	constructor(props: SButtonProps) {
 		super();
