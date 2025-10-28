@@ -44,5 +44,8 @@ const components = {
   "SButtonSelect": "Visual",
   "SToggleButton": "Visual",
   "FileInput": "Visual",
+  "AudioRecorder": "Visual",
+  "AudioPlayer": "Visual",
+  "CardAudioCombo": "Visual",
 };
 export default components;
