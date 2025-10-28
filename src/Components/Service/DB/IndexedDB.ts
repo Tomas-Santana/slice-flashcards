@@ -1,5 +1,5 @@
 import * as idb from "idb";
-import { StoreModel, StoreName } from "./modelMap";
+import { InsertStoreModel, StoreModel, StoreName } from "./modelMap";
 import { LanguageCode } from "../../../lib/types/languages";
 
 export class IndexedDBService {
@@ -47,12 +47,12 @@ export class IndexedDBService {
     return db.get(storeName, key) as any;
   }
 
-  async add<T extends StoreModel<S>, S extends StoreName>(storeName: S, value: T): Promise<IDBValidKey> {
+  async add<T extends InsertStoreModel<S>, S extends StoreName>(storeName: S, value: T): Promise<IDBValidKey> {
     const db = await this.dbPromise;
     return db.add(storeName, value as any);
   }
 
-  async put<T extends StoreModel<S>, S extends StoreName>(storeName: S, value: T): Promise<IDBValidKey> {
+  async put<T extends InsertStoreModel<S>, S extends StoreName>(storeName: S, value: T): Promise<IDBValidKey> {
     const db = await this.dbPromise;
     return db.put(storeName, value as any);
   }
