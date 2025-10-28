@@ -1,3 +1,4 @@
+import type SButton from "../SButton/SButton";
 import type { FileInputProps } from "./FileInput.types";
 import html from "@/lib/render";
 
@@ -12,7 +13,7 @@ export default class FileInput extends HTMLElement {
   props: FileInputProps;
 
   private $input: HTMLInputElement | null = null;
-  private $button: HTMLButtonElement | null = null;
+  private $button: SButton | null = null;
   private $status: HTMLElement | null = null;
 
   constructor(props: FileInputProps) {
@@ -22,6 +23,7 @@ export default class FileInput extends HTMLElement {
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
     this.props = props;
+
   }
 
   async init() {
@@ -32,19 +34,10 @@ export default class FileInput extends HTMLElement {
     this.$input = this.querySelector(
       ".slice_fileinput_input"
     ) as HTMLInputElement | null;
-    this.$button = this.querySelector(
-      ".slice_fileinput_button"
-    ) as HTMLButtonElement | null;
     this.$status = this.querySelector(
       ".slice_fileinput_status"
     ) as HTMLElement | null;
 
-    if (this.$button && this.$input) {
-      this.$button.addEventListener("click", () => {
-        if (this.props.disabled) return;
-        this.$input!.click();
-      });
-    }
 
     if (this.$input) {
       // Initialize attributes now that element exists
@@ -84,6 +77,14 @@ export default class FileInput extends HTMLElement {
   async getTemplate() {
     const acceptAttr = this.props?.accept || "";
 
+    this.$button = await window.slice.build("SButton", {
+      content: `Choose file${this.props?.multiple ? "s" : ""}`,
+      onClick: async () => {
+        if (this.props.disabled) return;
+        this.$input!.click();
+      }
+    });
+
     return html`
       <div class="slice_fileinput flex flex-col gap-2">
         <input
@@ -92,13 +93,10 @@ export default class FileInput extends HTMLElement {
           accept="${acceptAttr}"
         />
         <div class="flex items-center gap-3">
-          <button
-            type="button"
-            class="slice_fileinput_button px-3 py-1 rounded border border-border text-sm bg-white"
-          >
-            Choose file${this.props?.multiple ? "s" : ""}
-          </button>
-          <div class="slice_fileinput_status text-sm text-font-secondary"></div>
+          ${this.$button}
+          <div class="slice_fileinput_status text-md text-font-secondary">
+            
+          </div>
         </div>
       </div>
     `;
