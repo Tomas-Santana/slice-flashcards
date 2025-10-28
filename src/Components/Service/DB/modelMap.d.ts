@@ -14,6 +14,16 @@ export type ModelMap = {
   audio: AudioAsset;
 };
 
+export type InsertModelMap = {
+  decks: Omit<Deck, "id">;
+  cards: Omit<Card, "id">;
+  settings: Settings;
+  sessions: Omit<StudySession, "id">;
+  sessionCards: Omit<StudySessionCard, "id">;
+  audio: Omit<AudioAsset, "id">;
+};
+
 export type StoreName = keyof ModelMap;
 
 export type StoreModel<S extends StoreName> = ModelMap[S];
+export type InsertStoreModel<S extends StoreName> = InsertModelMap[S];
