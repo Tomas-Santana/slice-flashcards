@@ -58,6 +58,7 @@ export default class NewCardModal extends HTMLElement {
       onChange: (value) => {
         this.cardValues.originalText = value;
       },
+      conditions: { maxLength: 50 },
     });
 
     const translationInput = await window.slice.build("Input", {
@@ -65,6 +66,7 @@ export default class NewCardModal extends HTMLElement {
       onChange: (value) => {
         this.cardValues.translation[this.settings.selectedLanguage] = value;
       },
+      conditions: { maxLength: 50 },
     });
 
     const exampleSentenceInput = await window.slice.build("Input", {
@@ -72,25 +74,38 @@ export default class NewCardModal extends HTMLElement {
       onChange: (value) => {
         this.cardValues.exampleSentence[this.settings.selectedLanguage] = value;
       },
+      conditions: { maxLength: 50 },
     });
 
     const notesInput = await window.slice.build("Input", {
-      placeholder: `Notas (opcional)`,
+      placeholder: `Pista (opcional)`,
       onChange: (value) => {
         this.cardValues.notes = value;
       },
+      conditions: { maxLength: 50 },
     });
 
-    const difficultySelect = await window.slice.build("Select", {
-      label: "Dificultad",
+    const difficultySelect = await window.slice.build("SButtonSelect", {
       options: [
-        { text: "Básico", value: "basic" },
-        { text: "Intermedio", value: "intermediate" },
-        { text: "Avanzado", value: "advanced" },
+        { label: "Básico", value: "basic" },
+        { label: "Intermedio", value: "intermediate" },
+        { label: "Avanzado", value: "advanced" },
       ],
-      onOptionSelect: (option) => {
-        this.cardValues.difficulty = option.value as DifficultyBand;
+      onSelect: (option) => {
+        this.cardValues.difficulty = option as DifficultyBand;
       },
+      selectedValue: this.cardValues.difficulty || "basic",
+      singleSelect: true,
+      label: "Nivel de dificultad",
+    });
+
+    const fileInput = await window.slice.build("FileInput", {
+      onFileSelect: (file: File) => {
+        // Handle file selection
+      },
+      accept: ".png,.jpg,.jpeg",
+      multiple: false,
+      disabled: false,
     });
 
     const createButton = await window.slice.build("Button", {
@@ -101,15 +116,18 @@ export default class NewCardModal extends HTMLElement {
     });
 
     const dialogContent = html`
-      <div class="p-4 flex flex-col items-start gap-4 w-full">
+      <div class="p-4 flex flex-col items-start gap-8 w-full">
         <h3 class="text-2xl font-bold text-font-primary">Nueva carta</h3>
+        <div class="flex gap-4 w-full">
         <div class="w-full">${originalTextInput}</div>
         <div class="w-full">${translationInput}</div>
+        </div>
         <div class="w-full">
           ${exampleSentenceInput} 
         </div>
         <div class="w-full">${notesInput}</div>
         <div class="w-full">${difficultySelect}</div>
+        <div class="w-full">${fileInput}</div>
         ${createButton}
       </div>
     `;
