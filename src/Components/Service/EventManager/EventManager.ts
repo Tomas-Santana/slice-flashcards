@@ -24,6 +24,11 @@ export class EventManager {
     return () => this.unsubscribe(event, handler);
   }
 
+  subscribeToMultiple<E extends EventName>(events: E[], handler: Handler<E>): () => void {
+    const unsubscribers = events.map((event) => this.subscribe(event, handler));
+    return () => unsubscribers.forEach((unsub) => unsub());
+  }
+
   once<E extends EventName>(event: E, handler: Handler<E>): () => void {
     const wrapper = (payload: EventPayload<E>) => {
       try {
