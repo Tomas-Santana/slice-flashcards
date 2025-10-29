@@ -1,0 +1,27 @@
+/* SmallFlashcard flip animation */
+
+.sfc-outer {
+  perspective: 1000px;
+}
+
+.sfc-inner {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.4s;
+}
+
+.sfc-inner.sfc-flipped {
+  transform: rotateY(180deg);
+}
+
+.sfc-face {
+  backface-visibility: hidden;
+}
+
+.sfc-front {
+  transform: rotateY(0deg);
+}
+
+.sfc-back {
+  transform: rotateY(180deg);
+}

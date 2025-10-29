@@ -13,6 +13,7 @@ import type { InputProps } from './Components/Visual/Input/Input.types';
 import type { LogoProps } from './Components/Visual/Logo/Logo.types';
 import type { MultiRouteProps } from './Components/Visual/MultiRoute/MultiRoute.types';
 import type { NewCardModalProps } from './Components/Visual/NewCardModal/NewCardModal.types';
+import type { NewDeckModalProps } from './Components/Visual/NewDeckModal/NewDeckModal.types';
 import type { PageTitleProps } from './Components/Visual/PageTitle/PageTitle.types';
 import type { SButtonProps } from './Components/Visual/SButton/SButton.types';
 import type { SButtonSelectProps } from './Components/Visual/SButtonSelect/SButtonSelect.types';
@@ -22,6 +23,7 @@ import type { SIconProps } from './Components/Visual/SIcon/SIcon.types';
 import type { SidebarProps } from './Components/Visual/Sidebar/Sidebar.types';
 import type { SidebarLinkProps } from './Components/Visual/SidebarLink/SidebarLink.types';
 import type { SidebarToggleProps } from './Components/Visual/SidebarToggle/SidebarToggle.types';
+import type { SmallFlashcardProps } from './Components/Visual/SmallFlashcard/SmallFlashcard.types';
 import type { StartPracticeModalProps } from './Components/Visual/StartPracticeModal/StartPracticeModal.types';
 import type { SToggleButtonProps } from './Components/Visual/SToggleButton/SToggleButton.types';
 import type { FlashcardsPageProps } from './Components/AppComponents/FlashcardsPage/FlashcardsPage.types';
@@ -40,6 +42,7 @@ import type Input from './Components/Visual/Input/Input';
 import type Logo from './Components/Visual/Logo/Logo';
 import type MultiRoute from './Components/Visual/MultiRoute/MultiRoute';
 import type NewCardModal from './Components/Visual/NewCardModal/NewCardModal';
+import type NewDeckModal from './Components/Visual/NewDeckModal/NewDeckModal';
 import type PageTitle from './Components/Visual/PageTitle/PageTitle';
 import type SButton from './Components/Visual/SButton/SButton';
 import type SButtonSelect from './Components/Visual/SButtonSelect/SButtonSelect';
@@ -49,6 +52,7 @@ import type SIcon from './Components/Visual/SIcon/SIcon';
 import type Sidebar from './Components/Visual/Sidebar/Sidebar';
 import type SidebarLink from './Components/Visual/SidebarLink/SidebarLink';
 import type SidebarToggle from './Components/Visual/SidebarToggle/SidebarToggle';
+import type SmallFlashcard from './Components/Visual/SmallFlashcard/SmallFlashcard';
 import type StartPracticeModal from './Components/Visual/StartPracticeModal/StartPracticeModal';
 import type SToggleButton from './Components/Visual/SToggleButton/SToggleButton';
 import type EventManager from './Components/Service/EventManager/EventManager';
@@ -57,7 +61,7 @@ import type HomePage from './Components/AppComponents/HomePage/HomePage';
 import type PracticePage from './Components/AppComponents/PracticePage/PracticePage';
 import type StartPage from './Components/AppComponents/StartPage/StartPage';
 
-export type ComponentName = 'AudioPlayer' | 'AudioRecorder' | 'Button' | 'Card' | 'CardAudioCombo' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'Details' | 'Dialog' | 'DropDown' | 'FileInput' | 'Flashcard' | 'FlashcardList' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NotFound' | 'PageTitle' | 'Route' | 'SButton' | 'SButtonSelect' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'StartPracticeModal' | 'SToggleButton' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage';
+export type ComponentName = 'AudioPlayer' | 'AudioRecorder' | 'Button' | 'Card' | 'CardAudioCombo' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'Details' | 'Dialog' | 'DropDown' | 'FileInput' | 'Flashcard' | 'FlashcardList' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NewDeckModal' | 'NotFound' | 'PageTitle' | 'Route' | 'SButton' | 'SButtonSelect' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'SmallFlashcard' | 'StartPracticeModal' | 'SToggleButton' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage';
 
 export type ComponentPropsMap = {
   'AudioPlayer': AudioPlayerProps,
@@ -83,6 +87,7 @@ export type ComponentPropsMap = {
   'MultiRoute': MultiRouteProps,
   'Navbar': any,
   'NewCardModal': NewCardModalProps,
+  'NewDeckModal': NewDeckModalProps,
   'NotFound': any,
   'PageTitle': PageTitleProps,
   'Route': any,
@@ -94,6 +99,7 @@ export type ComponentPropsMap = {
   'Sidebar': SidebarProps,
   'SidebarLink': SidebarLinkProps,
   'SidebarToggle': SidebarToggleProps,
+  'SmallFlashcard': SmallFlashcardProps,
   'StartPracticeModal': StartPracticeModalProps,
   'SToggleButton': SToggleButtonProps,
   'Switch': any,
@@ -134,6 +140,7 @@ export type ComponentInstanceMap = {
   'MultiRoute': MultiRoute,
   'Navbar': any,
   'NewCardModal': NewCardModal,
+  'NewDeckModal': NewDeckModal,
   'NotFound': any,
   'PageTitle': PageTitle,
   'Route': any,
@@ -145,6 +152,7 @@ export type ComponentInstanceMap = {
   'Sidebar': Sidebar,
   'SidebarLink': SidebarLink,
   'SidebarToggle': SidebarToggle,
+  'SmallFlashcard': SmallFlashcard,
   'StartPracticeModal': StartPracticeModal,
   'SToggleButton': SToggleButton,
   'Switch': any,

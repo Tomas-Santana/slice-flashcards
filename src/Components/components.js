@@ -48,5 +48,7 @@ const components = {
   "AudioPlayer": "Visual",
   "CardAudioCombo": "Visual",
   "FlashcardList": "Visual",
+  "NewDeckModal": "Visual",
+  "SmallFlashcard": "Visual",
 };
 export default components;
