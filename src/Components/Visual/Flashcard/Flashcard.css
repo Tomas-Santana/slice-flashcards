@@ -2,12 +2,17 @@
 
 .fc-outer {
   perspective: 1000px;
+  /* Fixed width and height */
+  width: 24rem; /* w-96 */
+  height: 16rem; /* h-64 */
 }
 
 .fc-inner {
   position: relative;
   transform-style: preserve-3d;
   transition: transform 300ms ease;
+  width: 100%;
+  height: 100%;
 }
 
 .fc-inner.fc-flipped {
@@ -16,6 +21,8 @@
 
 .fc-face {
   backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .fc-back {

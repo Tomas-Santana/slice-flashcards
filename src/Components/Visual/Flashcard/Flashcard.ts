@@ -2,6 +2,8 @@ import type { FlashcardProps } from "./Flashcard.types";
 import html from "@/lib/render";
 import { openDatabase } from "@/Components/Service/DB/openDatabase";
 import { AudioAsset } from "@/Components/Service/DB/models/audio";
+import eventManager from "@/Components/Service/EventManager/EventManager";
+import type SButton from "../SButton/SButton";
 
 export default class Flashcard extends HTMLElement {
   static props = {
@@ -13,41 +15,58 @@ export default class Flashcard extends HTMLElement {
   audioAsset: AudioAsset | null = null;
   private _audioUrl: string | null = null;
   private $inner: HTMLElement | null = null;
-  private $showBtn: HTMLButtonElement | null = null;
-  private $hideBtn: HTMLButtonElement | null = null;
-  private $notesBtn: HTMLButtonElement | null = null;
+  private $showBtn: SButton | null = null;
+  private $hideBtn: SButton | null = null;
+  private $notesBtn: SButton | null = null;
   private $notesPanel: HTMLElement | null = null;
   private $audioEl: HTMLAudioElement | null = null;
+  private $playBtn: SButton | null = null;
+  private $editBtn: SButton | null = null;
 
   constructor(props: FlashcardProps) {
     super();
-    // @ts-ignore slice is provided by the framework at runtime
-    slice.attachTemplate(this);
+
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
     this.props = props;
   }
 
   async init() {
+    this.setAttribute("data-card-id", this.props.card.id.toString());
+    await this.render();
+  }
+
+  async update() {
+    // Revoke old audio URL if exists
+    if (this._audioUrl) {
+      try {
+        URL.revokeObjectURL(this._audioUrl);
+      } catch {}
+      this._audioUrl = null;
+    }
+
+    await this.render();
+  }
+
+  private async render() {
     // Load audio (if any) before rendering so template can include the control
     await this.loadAudio();
+
     const fragment = await this.getTemplate();
+
+    if (this.innerHTML) {
+      this.innerHTML = "";
+    }
     this.appendChild(fragment);
 
-    // Grab refs and wire events
+    // Wire up event listeners
+    this.attachEventListeners();
+  }
+
+  private attachEventListeners() {
+    // Grab refs
     this.$inner = this.querySelector(".fc-inner");
-    this.$showBtn = this.querySelector(
-      ".fc-show-btn"
-    ) as HTMLButtonElement | null;
-    this.$hideBtn = this.querySelector(
-      ".fc-hide-btn"
-    ) as HTMLButtonElement | null;
-    this.$notesBtn = this.querySelector(
-      ".fc-notes-btn"
-    ) as HTMLButtonElement | null;
-    this.$notesPanel = this.querySelector(
-      ".fc-notes-panel"
-    ) as HTMLElement | null;
+    this.$notesPanel = this.querySelector(".fc-notes-panel");
     this.$audioEl = this.querySelector(".fc-audio") as HTMLAudioElement | null;
 
     if (this.$showBtn && this.$inner) {
@@ -67,99 +86,164 @@ export default class Flashcard extends HTMLElement {
       });
     }
 
-    if (this.$audioEl) {
-      const playBtn = this.querySelector(
-        ".fc-audio-play"
-      ) as HTMLButtonElement | null;
-      if (playBtn) {
-        playBtn.addEventListener("click", () => {
-          this.$audioEl && this.$audioEl.play().catch(() => {});
-        });
-      }
+    if (this.$playBtn && this.$audioEl) {
+      this.$playBtn.addEventListener("click", () => {
+        this.$audioEl && this.$audioEl.play().catch(() => {});
+      });
     }
-  }
 
-  update() {
-    // Component update logic (can be async)
+    if (this.$editBtn) {
+      this.$editBtn.addEventListener("click", () => {
+        eventManager.publish("modal:newCard:open", {
+          cardId: this.props.card.id,
+        });
+      });
+    }
   }
 
   async getTemplate() {
     const card = this.props.card;
+    console.log("Flashcard card:", card.originalText, card.audioAssetId);
     const lang = this.props.frontLanguage;
     const translation = card.translation?.[lang] ?? "";
     const example = card.exampleSentence?.[lang] ?? "";
     const notes = card.notes ?? "";
 
-    // Build the card body first
+    // Difficulty colors and emojis
+    const difficultyConfig = {
+      basic: { color: "bg-green-100", emoji: "😀" },
+      intermediate: { color: "bg-yellow-100", emoji: "😐" },
+      advanced: { color: "bg-red-100", emoji: "😡" },
+    };
+
+    const difficulty = card.difficulty || "basic";
+    const difficultyColor = difficultyConfig[difficulty]?.color || "bg-white";
+    const difficultyEmoji = difficultyConfig[difficulty]?.emoji || "";
+
+    // Build SButton components
+    const flipIcon = await window.slice.build("SIcon", {
+      name: "rotate",
+      class: "",
+    });
+
+    const flipIcon2 = await window.slice.build("SIcon", {
+      name: "rotate",
+      class: "",
+    });
+
+    this.$showBtn = await window.slice.build("SButton", {
+      content: flipIcon2,
+      variant: "ghost",
+      class: "fc-show-btn",
+      size: "icon",
+    });
+
+    this.$hideBtn = await window.slice.build("SButton", {
+      content: flipIcon,
+      variant: "ghost",
+      class: "fc-hide-btn",
+      size: "icon",
+    });
+
+    const playIcon = await window.slice.build("SIcon", {
+      name: "play",
+      class: "",
+    });
+
+    this.$playBtn = await window.slice.build("SButton", {
+      content: playIcon,
+      size: "icon",
+      variant: "ghost",
+      class: "fc-audio-play",
+    });
+
+    const notesIcon = await window.slice.build("SIcon", {
+      name: "lightbulb",
+      class: "",
+    });
+
+    this.$notesBtn = await window.slice.build("SButton", {
+      content: notesIcon,
+      size: "icon",
+      variant: "ghost",
+      class: "fc-notes-btn",
+    });
+
+    const editIcon = await window.slice.build("SIcon", {
+      name: "pen-to-square",
+      class: "",
+    });
+
+    this.$editBtn =
+      this.props.showEditButton !== false
+        ? await window.slice.build("SButton", {
+            content: editIcon,
+            size: "icon",
+            variant: "ghost",
+            class: "fc-edit-btn",
+          })
+        : null;
+
+    // Build the card body with fixed dimensions
     const cardFrag = html`
       <div class="fc-outer">
-        <div class="fc-inner rounded shadow border bg-white">
-          <div class="fc-face fc-front p-8 flex flex-col">
-            <div class="text-2xl font-semibold text-font-primary">
-              ${translation} ${card.difficulty ? html`<span class="ml-2 text-sm px-2 py-1 rounded bg-primary-shade text-font-secondary">${card.difficulty}</span>` : ''}
+        <div class="fc-inner rounded shadow border bg-white w-96 h-64">
+          <!-- Front face -->
+          <div
+            class="fc-face fc-front p-6 flex flex-col h-full ${difficultyColor}"
+          >
+            <div class="flex-1 flex flex-col min-h-0">
+              <div
+                class="text-2xl font-semibold text-font-primary flex items-center gap-2"
+              >
+                <span>${translation}</span>
+                ${difficultyEmoji
+                  ? html`<span class="text-2xl">${difficultyEmoji}</span>`
+                  : ""}
+              </div>
+              ${example
+                ? html`<div
+                    class="mt-3 text-base text-font-secondary italic line-clamp-3"
+                  >
+                    ${example}
+                  </div>`
+                : ""}
+              ${notes
+                ? html`<div
+                    class="fc-notes-panel mt-3 p-3 rounded bg-white bg-opacity-60 text-sm text-font-secondary hidden overflow-auto"
+                  >
+                    ${notes}
+                  </div>`
+                : ""}
             </div>
-            ${example
-              ? html`<div class="mt-2 text-base text-font-secondary italic">
-                  ${example}
-                </div>`
-              : ""}
-            <div class="mt-4 flex items-center gap-2">
-              ${this._audioUrl
-                ? html`
-                    <button
-                      type="button"
-                      class="fc-audio-play px-3 py-1 rounded border border-border text-sm"
-                    >
-                      Play
-                    </button>
-                    <audio
+
+            <!-- Bottom section with buttons -->
+            <div class="mt-auto pt-4 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                ${this._audioUrl ? this.$playBtn : ""}
+                ${notes ? this.$notesBtn : ""} ${this.$editBtn || ""}
+                ${this._audioUrl
+                  ? html`<audio
                       class="fc-audio hidden"
                       src="${this._audioUrl}"
                       preload="metadata"
-                    ></audio>
-                  `
-                : ""}
-              ${notes
-                ? html`<button
-                    type="button"
-                    class="fc-notes-btn px-3 py-1 rounded border border-border text-sm"
-                  >
-                    Hints
-                  </button>`
-                : ""}
+                    ></audio>`
+                  : ""}
+              </div>
+              ${this.props.showFlipButton ? this.$showBtn : ""}
             </div>
-            ${notes
-              ? html`<div
-                  class="fc-notes-panel mt-2 p-2 rounded bg-primary-bg text-sm text-font-secondary hidden"
-                >
-                  ${notes}
-                </div>`
-              : ""}
-            ${this.props.showFlipButton
-              ? html`<div class="mt-auto pt-6">
-                  <button
-                    type="button"
-                    class="fc-show-btn px-3 py-1 rounded border border-border text-sm"
-                  >
-                    Show answer
-                  </button>
-                </div>`
-              : ""}
           </div>
+
+          <!-- Back face -->
           <div
-            class="fc-face fc-back p-8 absolute inset-0 bg-white rounded-md flex flex-col"
+            class="fc-face fc-back p-6 absolute inset-0 ${difficultyColor} rounded-md flex flex-col items-center justify-center h-full"
           >
-            <div class="text-2xl font-semibold text-font-primary">
+            <div class="text-3xl font-semibold text-font-primary text-center">
               ${card.originalText}
             </div>
             ${this.props.showFlipButton
-              ? html`<div class="mt-auto pt-6">
-                  <button
-                    type="button"
-                    class="fc-hide-btn px-3 py-1 rounded border border-border text-sm"
-                  >
-                    Hide answer
-                  </button>
+              ? html`<div class="absolute bottom-6 left-6">
+                  ${this.$hideBtn}
                 </div>`
               : ""}
           </div>
