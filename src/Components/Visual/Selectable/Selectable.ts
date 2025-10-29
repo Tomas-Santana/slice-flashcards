@@ -8,6 +8,7 @@ export default class Selectable extends HTMLElement {
   props: SelectableProps;
 
   private _selected = false;
+  private _initialized = false;
   private $root: HTMLElement | null = null;
   private $checkboxHost: HTMLElement | null = null;
   private $contentHost: HTMLElement | null = null;
@@ -15,8 +16,6 @@ export default class Selectable extends HTMLElement {
 
   constructor(props: SelectableProps) {
     super();
-    // @ts-ignore slice is provided by the framework at runtime
-    slice.attachTemplate(this);
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
     this.props = props;
@@ -38,8 +37,16 @@ export default class Selectable extends HTMLElement {
     this.$checkboxHost = this.querySelector(".selectable-checkbox-host");
     this.$contentHost = this.querySelector(".selectable-content-host");
 
-    // Apply initial selected state
-    this.selected = !!this.props?.selected;
+    // Apply initial selected state without triggering callback
+    this._selected = !!this.props?.selected;
+    if (this.$root) {
+      this.$root.classList.add("border-2");
+      this.$root.classList.toggle("border-primary", this._selected);
+      this.$root.classList.toggle("border-transparent", !this._selected);
+    }
+
+    // Mark as initialized so future changes will trigger the callback
+    this._initialized = true;
   }
 
   update() {
@@ -79,8 +86,10 @@ export default class Selectable extends HTMLElement {
       this.$root.classList.toggle("border-primary", this._selected);
       this.$root.classList.toggle("border-transparent", !this._selected);
     }
-    // Notify
-    this.props?.onSelectChange?.(this._selected);
+    // Only notify after initialization is complete
+    if (this._initialized) {
+      this.props?.onSelectChange?.(this._selected);
+    }
   }
 }
 
