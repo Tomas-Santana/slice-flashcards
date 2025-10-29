@@ -12,11 +12,9 @@ export default class SButtonSelect extends HTMLElement {
 
   constructor(props: SButtonSelectProps) {
     super();
-    // @ts-ignore slice is provided by the framework at runtime
-    slice.attachTemplate(this);
+    this.props = props;
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
-    this.props = props;
   }
 
   async init() {
@@ -72,6 +70,14 @@ export default class SButtonSelect extends HTMLElement {
       </div>
     `;
     return frag;
+  }
+
+  set selected(value: any) {
+    this.$buttons.forEach((btn, idx) => {
+      const option = this.props.options[idx];
+      btn.toggled = option.value === value;
+    });
+    this.props?.onSelect && this.props.onSelect(value);
   }
 }
 

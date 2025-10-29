@@ -12,8 +12,6 @@ export default class DeckCard extends HTMLElement {
 
   constructor(props: DeckCardProps) {
     super();
-    // @ts-ignore slice is provided by the framework at runtime
-    slice.attachTemplate(this);
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
     this.props = props;

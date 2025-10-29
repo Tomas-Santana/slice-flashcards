@@ -24,8 +24,6 @@ export default class SButton extends HTMLElement {
 
 	constructor(props: SButtonProps) {
 		super();
-		// @ts-ignore slice is provided by the framework at runtime
-		slice.attachTemplate(this);
 		// @ts-ignore controller at runtime
 		// slice.controller.setComponentProps(this, props);
 
