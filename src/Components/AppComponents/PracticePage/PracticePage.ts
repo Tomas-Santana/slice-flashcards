@@ -28,14 +28,14 @@ export default class PracticePage extends HTMLElement {
 
 	async getTemplate() {
 		const pageTitle = await window.slice.build('PageTitle', {
-			title: 'Practicar',
-			subtitle: 'Selecciona uno de tus mazos o haz una práctica con cartas aleatorias.'
+			title: 'Mis mazos',
+			subtitle: 'Practica, crea y administra tus mazos de tarjetas.',
 		});
 		const randomPracticeCard = await window.slice.build('DeckCard', {
 			deck: {
 				id: -1,
 				emoji: '🎲',
-				name: 'Práctica Aleatoria',
+				name: 'Mazo aleatorio',
 				difficulty: 'intermediate',
 				cardCount: 20,
 				createdAt: new Date(),
