@@ -8,4 +8,6 @@ export interface FlashcardListProps {
   showEditButton?: boolean;
   selectable?: boolean;
   onCardSelected?: (cardId: number, selected: boolean) => void;
+  cardSize?: "small" | "normal";
+  selected?: number[];
 }

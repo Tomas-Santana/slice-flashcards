@@ -1,6 +1,7 @@
 import type { FlashcardListProps } from "./FlashcardList.types";
 import type { Card } from "@/Components/Service/DB/models/card";
 import type Flashcard from "@/Components/Visual/Flashcard/Flashcard";
+import type SmallFlashcard from "@/Components/Visual/SmallFlashcard/SmallFlashcard";
 import type Selectable from "@/Components/Visual/Selectable/Selectable";
 import html from "@/lib/render";
 
@@ -11,7 +12,7 @@ export default class FlashcardList extends HTMLElement {
 
   props: FlashcardListProps;
   private cards: Card[] = [];
-  private $flashcardElements: (Flashcard | Selectable)[] = [];
+  private $flashcardElements: (Flashcard | SmallFlashcard | Selectable)[] = [];
 
   constructor(props: FlashcardListProps) {
     super();
@@ -49,17 +50,33 @@ export default class FlashcardList extends HTMLElement {
   }
 
   async buildCard(card: Card) {
-    const cardElement = await window.slice.build("Flashcard", {
-      card,
-      showFlipButton: this.props.showFlipButton ?? true,
-      showEditButton: this.props.showEditButton ?? true,
-      frontLanguage: this.props.frontLanguage,
-    });
+    const componentType =
+      this.props.cardSize === "small" ? "SmallFlashcard" : "Flashcard";
+
+    let cardElement: Flashcard | SmallFlashcard;
+
+    if (this.props.cardSize === "small") {
+      cardElement = await window.slice.build("SmallFlashcard", {
+        card,
+        frontLanguage: this.props.frontLanguage,
+      });
+    } else {
+      cardElement = await window.slice.build("Flashcard", {
+        card,
+        showFlipButton: this.props.showFlipButton ?? true,
+        showEditButton: this.props.showEditButton ?? true,
+        frontLanguage: this.props.frontLanguage,
+      });
+    }
 
     // Wrap in Selectable if needed
     if (this.props.selectable) {
+      // Check if this card should be initially selected
+      const isSelected = this.props.selected?.includes(card.id) ?? false;
+
       const selectable = await window.slice.build("Selectable", {
         content: cardElement,
+        selected: isSelected,
         onSelectChange: (selected: boolean) => {
           this.props.onCardSelected?.(card.id, selected);
         },
@@ -105,29 +122,39 @@ export default class FlashcardList extends HTMLElement {
     }
 
     const elementToUpdate = this.$flashcardElements.find((el) => {
-      // Check if it's a Selectable wrapping a Flashcard
+      // Check if it's a Selectable wrapping a card
       if (this.props.selectable && (el as any).props?.content) {
-        const flashcard = (el as any).props.content as Flashcard;
-        return flashcard.props?.card?.id === cardId;
+        const card = (el as any).props.content as Flashcard | SmallFlashcard;
+        return card.props?.card?.id === cardId;
       }
-      // Otherwise it's a direct Flashcard
-      return (el as Flashcard).props?.card?.id === cardId;
+      // Otherwise it's a direct card element
+      return (el as Flashcard | SmallFlashcard).props?.card?.id === cardId;
     });
 
     if (elementToUpdate) {
-      let flashcard: Flashcard;
+      let cardElement: Flashcard | SmallFlashcard;
 
       if (this.props.selectable) {
-        // Get the wrapped Flashcard from the Selectable
-        flashcard = (elementToUpdate as any).props.content as Flashcard;
+        // Get the wrapped card from the Selectable
+        cardElement = (elementToUpdate as any).props.content as
+          | Flashcard
+          | SmallFlashcard;
       } else {
-        flashcard = elementToUpdate as Flashcard;
+        cardElement = elementToUpdate as Flashcard | SmallFlashcard;
       }
 
-      if (flashcard) {
-        flashcard.props.card = updatedCard;
-        await flashcard.loadAudio();
-        await flashcard.update();
+      if (cardElement) {
+        cardElement.props.card = updatedCard;
+
+        // Only Flashcard has loadAudio method
+        if (
+          this.props.cardSize !== "small" &&
+          (cardElement as Flashcard).loadAudio
+        ) {
+          await (cardElement as Flashcard).loadAudio();
+        }
+
+        await cardElement.update();
       }
     }
   }
@@ -140,13 +167,13 @@ export default class FlashcardList extends HTMLElement {
     }
 
     const flashcardIndex = this.$flashcardElements.findIndex((el) => {
-      // Check if it's a Selectable wrapping a Flashcard
+      // Check if it's a Selectable wrapping a card
       if (this.props.selectable && (el as any).props?.content) {
-        const flashcard = (el as any).props.content as Flashcard;
-        return flashcard.props?.card?.id === cardId;
+        const card = (el as any).props.content as Flashcard | SmallFlashcard;
+        return card.props?.card?.id === cardId;
       }
-      // Otherwise it's a direct Flashcard
-      return (el as Flashcard).props?.card?.id === cardId;
+      // Otherwise it's a direct card element
+      return (el as Flashcard | SmallFlashcard).props?.card?.id === cardId;
     });
 
     if (flashcardIndex !== -1) {
@@ -158,8 +185,9 @@ export default class FlashcardList extends HTMLElement {
     ) as HTMLElement;
     if (!cardsContainer) return;
 
+    // Query for either flashcard or smallflashcard
     const cardElement = cardsContainer.querySelector(
-      `slice-flashcard[data-card-id="${cardId}"]`
+      `slice-flashcard[data-card-id="${cardId}"], slice-smallflashcard[data-card-id="${cardId}"]`
     );
 
     if (cardElement) {
