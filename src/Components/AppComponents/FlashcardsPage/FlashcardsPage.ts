@@ -4,6 +4,7 @@ import { openDatabase } from "@/Components/Service/DB/openDatabase";
 import type { Card } from "@/Components/Service/DB/models/card";
 import eventManager from "@/Components/Service/EventManager/EventManager";
 import { Settings } from "@/Components/Service/DB/models/settings";
+import type FlashcardList from "@/Components/Visual/FlashcardList/FlashcardList";
 
 export default class FlashcardsPage extends HTMLElement {
   static props = {
@@ -12,6 +13,7 @@ export default class FlashcardsPage extends HTMLElement {
 
   private db = openDatabase();
   cards: Card[] = [];
+  $flashcardList: FlashcardList | null = null;
   settings: Settings | null = null;
 
   constructor(props: FlashcardsPageProps) {
@@ -35,7 +37,34 @@ export default class FlashcardsPage extends HTMLElement {
     eventManager.subscribe("card:created", async ({ cardId }) => {
       const newCard = await this.db.get("cards", cardId);
       this.cards.push(newCard);
-      await this.addCardToContainer(newCard);
+      if (this.$flashcardList) {
+        await this.$flashcardList.addCard(newCard);
+      }
+    });
+
+    eventManager.subscribe("card:updated", async ({ cardId }) => {
+      const updatedCard = await this.db.get("cards", cardId);
+      // Update card in array
+      const cardIndex = this.cards.findIndex((c) => c.id === cardId);
+      if (cardIndex !== -1) {
+        this.cards[cardIndex] = updatedCard;
+      }
+      // Update card in component
+      if (this.$flashcardList) {
+        await this.$flashcardList.updateCard(cardId, updatedCard);
+      }
+    });
+
+    eventManager.subscribe("card:deleted", async ({ cardId }) => {
+      // Remove card from array
+      const cardIndex = this.cards.findIndex((c) => c.id === cardId);
+      if (cardIndex !== -1) {
+        this.cards.splice(cardIndex, 1);
+      }
+      // Remove card from component
+      if (this.$flashcardList) {
+        this.$flashcardList.removeCard(cardId);
+      }
     });
   }
 
@@ -60,9 +89,17 @@ export default class FlashcardsPage extends HTMLElement {
       type: "search",
     });
 
-    const cardElements = await Promise.all(
-      this.cards.map((card) => this.buildCard(card))
-    );
+    this.$flashcardList = await window.slice.build("FlashcardList", {
+      cards: this.cards,
+      frontLanguage: this.settings.selectedLanguage,
+      showFlipButton: true,
+      showEditButton: true,
+      selectable: true,
+      onCardSelected: (cardId: number, selected: boolean) => {
+        console.log(`Card ${cardId} selected: ${selected}`);
+      }
+    });
+
     return html`
       <div class="flex flex-col p-4 gap-4">
         <div class="flex justify-between items-center w-full">
@@ -72,42 +109,9 @@ export default class FlashcardsPage extends HTMLElement {
           </div>
         </div>
 
-        <div class="flex flex-wrap gap-4" id="cards-container">
-          ${cardElements.length > 0
-            ? cardElements
-            : html`<div
-                class="no-cards-message text-center text-gray-500 w-full"
-              >
-                No hay cartas disponibles. Crea una nueva carta para empezar.
-              </div>`}
-        </div>
+        ${this.$flashcardList}
       </div>
     `;
-  }
-
-  async addCardToContainer(card: Card) {
-    const cardsContainer = this.querySelector(
-      "#cards-container"
-    ) as HTMLElement;
-    // Remove "no cards" message if present
-    const noCardsMessage = cardsContainer.querySelector(
-      ".no-cards-message"
-    ) as HTMLElement;
-    if (noCardsMessage) {
-      noCardsMessage.remove();
-    }
-
-    const selectable = await this.buildCard(card);
-    cardsContainer.appendChild(selectable);
-  }
-
-  async buildCard(card: Card) {
-    const cardElement = await window.slice.build("Flashcard", {
-      card,
-      showFlipButton: true,
-      frontLanguage: this.settings.selectedLanguage,
-    });
-    return cardElement;
   }
 }
 
