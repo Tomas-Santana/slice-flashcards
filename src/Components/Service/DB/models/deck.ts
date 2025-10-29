@@ -8,4 +8,5 @@ export interface Deck {
   cardCount: number;
   createdAt: Date;
   updatedAt: Date;
+  cardIds: number[];
 }
