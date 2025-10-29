@@ -22,8 +22,6 @@ export default class AudioPlayer extends HTMLElement {
 
   constructor(props: AudioPlayerProps) {
     super();
-    // @ts-ignore slice is provided by the framework at runtime
-    slice.attachTemplate(this);
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
     this.props = props;
@@ -40,8 +38,25 @@ export default class AudioPlayer extends HTMLElement {
     this.$duration = this.querySelector(".ap-duration");
 
     if (this.$audio) {
+      // Add error event listener first
+      this.$audio.addEventListener("error", (e) => {
+        console.error("Audio error:", e, this.$audio?.error);
+      });
+
       // Wire audio events
       this.$audio.addEventListener("loadedmetadata", () => {
+        this.updateDuration();
+      });
+
+      this.$audio.addEventListener("loadeddata", () => {
+        this.updateDuration();
+      });
+
+      this.$audio.addEventListener("canplay", () => {
+        this.updateDuration();
+      });
+
+      this.$audio.addEventListener("durationchange", () => {
         this.updateDuration();
       });
 
@@ -60,6 +75,22 @@ export default class AudioPlayer extends HTMLElement {
       this.$audio.addEventListener("pause", () => {
         this.updateButtonIcon(false);
       });
+
+      // Set the audio source programmatically (better for blob URLs)
+      if (this.props.audioUrl) {
+        this.$audio.src = this.props.audioUrl;
+
+        // Check if duration is already available (sometimes it loads immediately)
+        setTimeout(() => {
+          if (
+            this.$audio &&
+            isFinite(this.$audio.duration) &&
+            this.$audio.duration > 0
+          ) {
+            this.updateDuration();
+          }
+        }, 100);
+      }
     }
 
     // Wire button clicks
@@ -207,18 +238,33 @@ export default class AudioPlayer extends HTMLElement {
   updateProgress() {
     if (!this.$audio || !this.$progressBar || !this.$currentTime) return;
 
-    const percent = (this.$audio.currentTime / this.$audio.duration) * 100;
-    this.$progressBar.style.width = `${percent}%`;
+    // Only update if duration is valid
+    if (
+      isFinite(this.$audio.duration) &&
+      !isNaN(this.$audio.duration) &&
+      this.$audio.duration > 0
+    ) {
+      const percent = (this.$audio.currentTime / this.$audio.duration) * 100;
+      this.$progressBar.style.width = `${percent}%`;
+    } else {
+      this.$progressBar.style.width = "0%";
+    }
+
     this.$currentTime.textContent = this.formatTime(this.$audio.currentTime);
   }
 
   updateDuration() {
     if (!this.$audio || !this.$duration) return;
-    this.$duration.textContent = this.formatTime(this.$audio.duration);
+    // Check if duration is valid before updating
+    if (isFinite(this.$audio.duration) && !isNaN(this.$audio.duration)) {
+      this.$duration.textContent = this.formatTime(this.$audio.duration);
+    } else {
+      this.$duration.textContent = "0:00";
+    }
   }
 
   formatTime(seconds: number): string {
-    if (isNaN(seconds)) return "0:00";
+    if (!isFinite(seconds) || isNaN(seconds)) return "0:00";
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, "0")}`;

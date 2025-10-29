@@ -22,8 +22,6 @@ export default class AudioRecorder extends HTMLElement {
 
   constructor(props: AudioRecorderProps) {
     super();
-    // @ts-ignore slice is provided by the framework at runtime
-    slice.attachTemplate(this);
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
     this.props = props;
@@ -200,7 +198,23 @@ export default class AudioRecorder extends HTMLElement {
     }
 
     this.chunks = [];
-    this.mediaRecorder = new MediaRecorder(this.stream);
+
+    // Determine the best supported audio format
+    // Prefer OGG over WebM as it handles duration metadata better
+    let mimeType = "audio/ogg;codecs=opus";
+    if (MediaRecorder.isTypeSupported("audio/ogg;codecs=opus")) {
+      mimeType = "audio/ogg;codecs=opus";
+    } else if (MediaRecorder.isTypeSupported("audio/ogg")) {
+      mimeType = "audio/ogg";
+    } else if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
+      mimeType = "audio/webm;codecs=opus";
+    } else if (MediaRecorder.isTypeSupported("audio/webm")) {
+      mimeType = "audio/webm";
+    } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
+      mimeType = "audio/mp4";
+    }
+
+    this.mediaRecorder = new MediaRecorder(this.stream, { mimeType });
 
     this.mediaRecorder.ondataavailable = (e) => {
       if (e.data.size > 0) {
@@ -220,7 +234,9 @@ export default class AudioRecorder extends HTMLElement {
       }
     };
 
-    this.mediaRecorder.start();
+    // Start recording with timeslices to ensure proper duration metadata
+    // Using 100ms slices helps WebM files have correct duration
+    this.mediaRecorder.start(100);
 
     // Update button states
     if (this.$recordBtn) {
