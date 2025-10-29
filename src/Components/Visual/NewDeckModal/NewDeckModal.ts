@@ -66,6 +66,14 @@ export default class NewDeckModal extends HTMLElement {
     this.appendChild(fragment);
 
 		this.$cardCountElement = this.querySelector(".card-count") as HTMLSpanElement;
+
+		eventManager.subscribeToMultiple(["card:created", "card:updated", "card:deleted"], async () => {
+			// Reload available cards on any card change
+			this.availableCards = await this.db.getAll("cards");
+			if (this.$flashcardList) {
+				await this.$flashcardList.update();
+			}
+		});
   }
 
   async update() {
@@ -90,7 +98,7 @@ export default class NewDeckModal extends HTMLElement {
       onChange: (value: string) => {
         this.deckValues.emoji = value;
       },
-      conditions: { maxLength: 1 },
+      conditions: { maxLength: 3 },
     });
 
     this.$difficultySelect = await window.slice.build("SButtonSelect", {
@@ -114,7 +122,7 @@ export default class NewDeckModal extends HTMLElement {
       showFlipButton: false,
       showEditButton: false,
       selectable: true,
-      selected: [1,2,4],
+      selected: Array.from(this.selectedCardIds),
 			cardSize: "small",
       onCardSelected: (cardId: number, selected: boolean) => {
         if (selected) {
@@ -122,7 +130,6 @@ export default class NewDeckModal extends HTMLElement {
         } else {
           this.selectedCardIds.delete(cardId);
         }
-        this.updateCardCount();
       },
     });
 
@@ -164,7 +171,7 @@ export default class NewDeckModal extends HTMLElement {
 
         <div class="w-full">
           <h4 class="text-lg font-semibold text-font-primary mb-3">
-            Seleccionar cartas (<span class="font-bold card-count">${this.selectedCardIds.size}</span> seleccionadas)
+            Seleccionar cartas
           </h4>
           <div class="max-h-96 overflow-y-auto border rounded-md p-4">
             ${this.$flashcardList}
@@ -190,10 +197,6 @@ export default class NewDeckModal extends HTMLElement {
 
     return html` ${triggerButton} ${this.$dialog} `;
   }
-
-	updateCardCount() {
-		this.$cardCountElement.textContent = String(this.selectedCardIds.size);
-	}
 
   async createDeck() {
     if (!this.deckValues.name) {
