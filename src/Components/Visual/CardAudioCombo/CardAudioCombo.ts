@@ -20,8 +20,6 @@ export default class CardAudioCombo extends HTMLElement {
 
   constructor(props: CardAudioComboProps) {
     super();
-    // @ts-ignore slice is provided by the framework at runtime
-    slice.attachTemplate(this);
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
     this.props = props;
@@ -37,7 +35,8 @@ export default class CardAudioCombo extends HTMLElement {
     // Check if we have initial audio blob
     if (this.props.initialAudioBlob) {
       this.currentAudioBlob = this.props.initialAudioBlob;
-      this.currentMimeType = this.props.initialMimeType || "audio/webm";
+      this.currentMimeType =
+        this.props.initialMimeType || "audio/ogg;codecs=opus";
       this.currentAudioUrl = URL.createObjectURL(this.props.initialAudioBlob);
       await this.updatePlayerAndShow();
     } else {
@@ -60,10 +59,10 @@ export default class CardAudioCombo extends HTMLElement {
         this.handleRecordingComplete(blob, mimeType),
     });
 
-    // Build initial AudioPlayer (will be replaced when audio is set)
-    this.$audioPlayer = await window.slice.build("AudioPlayer", {
-      audioUrl: "",
-    });
+    // Build initial placeholder AudioPlayer (hidden, will be replaced when audio is set)
+    // Use a data URI or don't build it at all initially
+    this.$audioPlayer = document.createElement("div");
+    this.$audioPlayer.classList.add("ap-placeholder");
 
     // Build close/discard button with X icon
     const closeIcon = await window.slice.build("SIcon", {
@@ -116,16 +115,25 @@ export default class CardAudioCombo extends HTMLElement {
   }
 
   handleRecordingComplete(blob: Blob, mimeType: string) {
+    console.log("Recording complete:", mimeType, blob);
     // Store the recorded audio
     this.currentAudioBlob = blob;
-    this.currentMimeType = mimeType;
+    // Fallback to 'audio/ogg;codecs=opus' if mimeType is empty
+    this.currentMimeType = mimeType || "audio/ogg;codecs=opus";
     this.currentAudioUrl = URL.createObjectURL(blob);
+    console.log("Created blob URL:", this.currentAudioUrl);
 
     // Update player and show it
     this.updatePlayerAndShow();
   }
 
   async updatePlayerAndShow() {
+    if (!this.currentAudioUrl) {
+      console.error("No audio URL available");
+      return;
+    }
+
+    console.log("Building AudioPlayer with URL:", this.currentAudioUrl);
     // Rebuild the audio player with the new audio URL
     const newPlayer = await window.slice.build("AudioPlayer", {
       audioUrl: this.currentAudioUrl,
@@ -164,7 +172,7 @@ export default class CardAudioCombo extends HTMLElement {
     // Show input section, hide player section
     this.showInputSection();
 
-    // Notify parent component
+    // Notify parent component that audio was cleared
     if (this.props.onAudioChange) {
       this.props.onAudioChange(null);
     }
