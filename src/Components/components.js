@@ -50,5 +50,6 @@ const components = {
   "FlashcardList": "Visual",
   "NewDeckModal": "Visual",
   "SmallFlashcard": "Visual",
+  "DeckList": "Visual",
 };
 export default components;
