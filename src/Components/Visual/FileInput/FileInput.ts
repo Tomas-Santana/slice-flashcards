@@ -18,8 +18,6 @@ export default class FileInput extends HTMLElement {
 
   constructor(props: FileInputProps) {
     super();
-    // @ts-ignore slice is provided by the framework at runtime
-    slice.attachTemplate(this);
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
     this.props = props;
