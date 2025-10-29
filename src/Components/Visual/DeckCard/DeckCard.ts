@@ -1,7 +1,6 @@
 import html from "@/lib/render";
 import { getRandomColor } from "@/lib/utils/randomColor";
 import type { DeckCardProps } from "./DeckCard.types";
-import type StartPracticeModal from "../StartPracticeModal/StartPracticeModal";
 import type SButton from "../SButton/SButton";
 import eventManager from "@/Components/Service/EventManager/EventManager";
 
@@ -10,7 +9,6 @@ export default class DeckCard extends HTMLElement {
     // Define your component props here (runtime schema)
   };
   props: DeckCardProps;
-  $modal: StartPracticeModal;
   $editBtn: SButton | null = null;
   $cardContainer: HTMLElement | null = null;
 
@@ -22,13 +20,17 @@ export default class DeckCard extends HTMLElement {
   }
 
   async init() {
+    this.setAttribute("data-deck-id", this.props.deck.id.toString());
     const fragment = await this.getTemplate();
     this.appendChild(fragment);
     this.attachEventListeners();
   }
 
-  update() {
-    // Component update logic (can be async)
+  async update() {
+    const fragment = await this.getTemplate();
+    this.innerHTML = "";
+    this.appendChild(fragment);
+    this.attachEventListeners();
   }
 
   private attachEventListeners() {
@@ -36,7 +38,9 @@ export default class DeckCard extends HTMLElement {
 
     if (this.$cardContainer) {
       this.$cardContainer.addEventListener("click", () => {
-        this.$modal.open = true;
+        eventManager.publish("modal:startPractice:open", {
+          deckId: this.props.deck.id,
+        });
       });
     }
 
@@ -51,10 +55,6 @@ export default class DeckCard extends HTMLElement {
   }
 
   async getTemplate() {
-    this.$modal = (await window.slice.build("StartPracticeModal", {
-      deck: this.props.deck,
-    })) as StartPracticeModal;
-
     // Only create edit button if showEditButton is true (default true)
     const editIcon =
       this.props.showEditButton !== false
@@ -89,18 +89,16 @@ export default class DeckCard extends HTMLElement {
       <div
         style="background-color: ${getRandomColor(this.props.deck.name) +
         "88"};"
-        class="deck-card-container p-6 rounded shadow hover:shadow-lg transition-shadow duration-200 cursor-pointer w-96 h-64 flex flex-col justify-center items-center gap-4"
+        class="deck-card-container p-6 rounded shadow hover:shadow-lg transition-shadow duration-200 cursor-pointer w-96 h-64 flex flex-col justify-between relative"
       >
         <!-- Top section with emoji and edit button -->
-        <div class="flex justify-between items-start">
-        <div></div>
-          <div class="text-5xl">${this.props.deck.emoji}</div>
-          <div>${this.$editBtn || ""}</div>
-        </div>
+        <div class="h-10 absolute top-4 right-4">${this.$editBtn || ""}</div>
 
         <!-- Middle section with deck name -->
-        <div class="flex-1 flex items-center justify-center">
-          <h3 class="text-2xl font-bold text-font-primary text-center">
+        <div class="flex flex-col gap-2 items-start justify-start">
+          <div class="text-5xl">${this.props.deck.emoji}</div>
+
+          <h3 class="text-2xl font-bold text-font-primary">
             ${this.props.deck.name}
           </h3>
         </div>
@@ -125,7 +123,6 @@ export default class DeckCard extends HTMLElement {
             : ""}
         </div>
       </div>
-      ${this.$modal}
     `;
   }
 }
