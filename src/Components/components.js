@@ -47,5 +47,6 @@ const components = {
   "AudioRecorder": "Visual",
   "AudioPlayer": "Visual",
   "CardAudioCombo": "Visual",
+  "FlashcardList": "Visual",
 };
 export default components;

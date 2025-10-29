@@ -8,6 +8,7 @@ import type { DeckCardProps } from './Components/Visual/DeckCard/DeckCard.types'
 import type { DialogProps } from './Components/Visual/Dialog/Dialog.types';
 import type { FileInputProps } from './Components/Visual/FileInput/FileInput.types';
 import type { FlashcardProps } from './Components/Visual/Flashcard/Flashcard.types';
+import type { FlashcardListProps } from './Components/Visual/FlashcardList/FlashcardList.types';
 import type { InputProps } from './Components/Visual/Input/Input.types';
 import type { LogoProps } from './Components/Visual/Logo/Logo.types';
 import type { MultiRouteProps } from './Components/Visual/MultiRoute/MultiRoute.types';
@@ -34,6 +35,7 @@ import type DeckCard from './Components/Visual/DeckCard/DeckCard';
 import type Dialog from './Components/Visual/Dialog/Dialog';
 import type FileInput from './Components/Visual/FileInput/FileInput';
 import type Flashcard from './Components/Visual/Flashcard/Flashcard';
+import type FlashcardList from './Components/Visual/FlashcardList/FlashcardList';
 import type Input from './Components/Visual/Input/Input';
 import type Logo from './Components/Visual/Logo/Logo';
 import type MultiRoute from './Components/Visual/MultiRoute/MultiRoute';
@@ -55,7 +57,7 @@ import type HomePage from './Components/AppComponents/HomePage/HomePage';
 import type PracticePage from './Components/AppComponents/PracticePage/PracticePage';
 import type StartPage from './Components/AppComponents/StartPage/StartPage';
 
-export type ComponentName = 'AudioPlayer' | 'AudioRecorder' | 'Button' | 'Card' | 'CardAudioCombo' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'Details' | 'Dialog' | 'DropDown' | 'FileInput' | 'Flashcard' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NotFound' | 'PageTitle' | 'Route' | 'SButton' | 'SButtonSelect' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'StartPracticeModal' | 'SToggleButton' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage';
+export type ComponentName = 'AudioPlayer' | 'AudioRecorder' | 'Button' | 'Card' | 'CardAudioCombo' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'Details' | 'Dialog' | 'DropDown' | 'FileInput' | 'Flashcard' | 'FlashcardList' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NotFound' | 'PageTitle' | 'Route' | 'SButton' | 'SButtonSelect' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'StartPracticeModal' | 'SToggleButton' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage';
 
 export type ComponentPropsMap = {
   'AudioPlayer': AudioPlayerProps,
@@ -71,6 +73,7 @@ export type ComponentPropsMap = {
   'DropDown': any,
   'FileInput': FileInputProps,
   'Flashcard': FlashcardProps,
+  'FlashcardList': FlashcardListProps,
   'Grid': any,
   'Icon': any,
   'Input': InputProps,
@@ -121,6 +124,7 @@ export type ComponentInstanceMap = {
   'DropDown': any,
   'FileInput': FileInput,
   'Flashcard': Flashcard,
+  'FlashcardList': FlashcardList,
   'Grid': any,
   'Icon': any,
   'Input': Input,
