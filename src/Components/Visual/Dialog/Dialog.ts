@@ -47,8 +47,7 @@ export default class Dialog extends HTMLElement {
   getTemplate() {
     return html`
       <dialog
-				
-        class="rounded p-0 shadow-xl w-[90vw] max-w-lg"
+        class="rounded p-0 shadow-xl md:w-[80vw] w-full"
       >
         <div class="bg-white rounded-xl overflow-hidden">
           ${this.props.content ?? ""}
