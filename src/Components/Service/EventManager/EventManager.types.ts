@@ -29,7 +29,8 @@ export interface AppEventMap {
 
   "sidebar:toggle": {};
 
-  "modal:newCard:open": { cardId: number | null }
+  "modal:newCard:open": { cardId?: number };
+  "modal:newDeck:open": { deckId?: number };
 }
 
 export type EventName = keyof AppEventMap;
