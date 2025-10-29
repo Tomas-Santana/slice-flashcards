@@ -94,7 +94,6 @@ export default class FlashcardsPage extends HTMLElement {
       frontLanguage: this.settings.selectedLanguage,
       showFlipButton: true,
       showEditButton: true,
-      selectable: true,
       onCardSelected: (cardId: number, selected: boolean) => {
         console.log(`Card ${cardId} selected: ${selected}`);
       }
