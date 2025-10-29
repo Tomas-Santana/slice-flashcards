@@ -31,6 +31,7 @@ export interface AppEventMap {
 
   "modal:newCard:open": { cardId?: number };
   "modal:newDeck:open": { deckId?: number };
+  "modal:startPractice:open": { deckId: number };
 }
 
 export type EventName = keyof AppEventMap;
