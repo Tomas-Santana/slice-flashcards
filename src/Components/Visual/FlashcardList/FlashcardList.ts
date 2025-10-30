@@ -14,6 +14,12 @@ export default class FlashcardList extends HTMLElement {
   private cards: Card[] = [];
   private $flashcardElements: (Flashcard | SmallFlashcard | Selectable)[] = [];
 
+  emptyCardMessage: DocumentFragment = html`
+    <div class="no-cards-message text-center text-gray-500 w-full min-h-64 grid place-content-center">
+      No hay cartas que coincidan con los criterios de búsqueda.
+    </div>
+  `;
+
   constructor(props: FlashcardListProps) {
     super();
     // @ts-ignore controller at runtime
@@ -42,9 +48,7 @@ export default class FlashcardList extends HTMLElement {
       <div class="flex flex-wrap gap-4" id="cards-container">
         ${this.$flashcardElements.length > 0
           ? this.$flashcardElements
-          : html`<div class="no-cards-message text-center text-gray-500 w-full">
-              No hay cartas disponibles. Crea una nueva carta para empezar.
-            </div>`}
+          : this.emptyCardMessage}
       </div>
     `;
   }
@@ -65,6 +69,7 @@ export default class FlashcardList extends HTMLElement {
         card,
         showFlipButton: this.props.showFlipButton ?? true,
         showEditButton: this.props.showEditButton ?? true,
+        showProgress: this.props.showProgress ?? false,
         frontLanguage: this.props.frontLanguage,
       });
     }
@@ -196,9 +201,8 @@ export default class FlashcardList extends HTMLElement {
 
     // Show "no cards" message if all cards are deleted
     if (this.cards.length === 0 && cardsContainer) {
-      cardsContainer.innerHTML = `<div class="no-cards-message text-center text-gray-500 w-full">
-        No hay cartas disponibles. Crea una nueva carta para empezar.
-      </div>`;
+      cardsContainer.innerHTML = "";
+      cardsContainer.appendChild(this.emptyCardMessage);
     }
   }
 }

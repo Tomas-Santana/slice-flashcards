@@ -6,6 +6,7 @@ export interface FlashcardListProps {
   frontLanguage: LanguageCode;
   showFlipButton?: boolean;
   showEditButton?: boolean;
+  showProgress?: boolean;
   selectable?: boolean;
   onCardSelected?: (cardId: number, selected: boolean) => void;
   cardSize?: "small" | "normal";
