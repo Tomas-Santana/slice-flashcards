@@ -32,6 +32,7 @@ export default class HomePage extends HTMLElement {
     const sidebarToggle = await window.slice.build("SidebarToggle", {
       iconName: "bars",
     });
+    const languageSelect = await window.slice.build("LanguageSelect", {});
 
     const multiRoute = await window.slice.build("MultiRoute", {
       routes: [
@@ -48,8 +49,12 @@ export default class HomePage extends HTMLElement {
 
     return html`
       <div class="flex flex-col gap-2">
-        ${sidebar} 
+        ${sidebar}
+        <div class="flex w-full items-center justify-between px-4 mb-4">
+        
         ${sidebarToggle} 
+        ${languageSelect}
+        </div> 
         ${multiRoute}
       </div>
     `;

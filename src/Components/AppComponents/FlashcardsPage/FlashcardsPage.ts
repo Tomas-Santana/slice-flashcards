@@ -27,7 +27,7 @@ export default class FlashcardsPage extends HTMLElement {
 
   async init() {
     // Component initialization logic (can be async)
-    this.settings = await this.db.get("settings", "settings");
+    await this.loadSettings();
     this.cards = await this.db.getAll("cards");
 
     this.cards.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -56,6 +56,13 @@ export default class FlashcardsPage extends HTMLElement {
       }
     });
 
+    eventManager.subscribe("settings:updated", async () => {
+      this.settings = await this.db.get("settings", "settings");
+      if (this.$flashcardList && this.settings) {
+        this.$flashcardList.setFrontLanguage(this.settings.selectedLanguage);
+      }
+    });
+
     eventManager.subscribe("card:deleted", async ({ cardId }) => {
       // Remove card from array
       const cardIndex = this.cards.findIndex((c) => c.id === cardId);
@@ -67,6 +74,10 @@ export default class FlashcardsPage extends HTMLElement {
         this.$flashcardList.removeCard(cardId);
       }
     });
+  }
+
+  async loadSettings() {
+    this.settings = await this.db.get("settings", "settings");
   }
 
   update() {

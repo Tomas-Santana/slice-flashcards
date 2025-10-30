@@ -45,6 +45,9 @@ export default class SmallFlashcard extends HTMLElement {
     const card = this.props.card;
     const lang = this.props.frontLanguage;
     const translation = card.translation?.[lang] ?? "";
+    
+    // Check if translation exists for this language
+    const hasTranslation = translation && translation.trim().length > 0;
 
     // Difficulty colors and emojis
     const difficultyConfig = {
@@ -63,11 +66,19 @@ export default class SmallFlashcard extends HTMLElement {
           <div
             class="sfc-face sfc-front flex flex-col items-center justify-center p-3 h-full ${difficultyColor}"
           >
-            <div
-              class="text-lg font-bold text-font-primary text-center line-clamp-2"
-            >
-              ${translation}
-            </div>
+            ${hasTranslation
+              ? html`
+                  <div
+                    class="text-lg font-bold text-font-primary text-center line-clamp-2"
+                  >
+                    ${translation}
+                  </div>
+                `
+              : html`
+                  <div class="text-xs text-font-secondary text-center">
+                    Sin traducción <br> (<span class="font-semibold">${card.originalText}</span>)
+                  </div>
+                `}
           </div>
 
           <!-- Back face -->

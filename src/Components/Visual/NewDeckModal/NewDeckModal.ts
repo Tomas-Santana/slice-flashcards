@@ -59,7 +59,7 @@ export default class NewDeckModal extends HTMLElement {
   }
 
   async init() {
-    this.settings = await this.db.get("settings", "settings");
+    await this.loadSettings();
     // Load all available cards
     this.availableCards = await this.db.getAll("cards");
     const fragment = await this.getTemplate();
@@ -74,6 +74,18 @@ export default class NewDeckModal extends HTMLElement {
 				await this.$flashcardList.update();
 			}
 		});
+
+    eventManager.subscribe("settings:updated", async () => {
+      await this.loadSettings();
+      if (this.$flashcardList && this.settings) {
+        this.$flashcardList.setFrontLanguage(this.settings.selectedLanguage);
+      }
+    });
+
+  }
+
+  async loadSettings() {
+    this.settings = await this.db.get("settings", "settings");
   }
 
   async update() {

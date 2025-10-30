@@ -7,6 +7,7 @@ import { openDatabase } from "@/Components/Service/DB/openDatabase";
 import type SButtonSelect from "../SButtonSelect/SButtonSelect";
 import type { Card } from "@/Components/Service/DB/models/card";
 import type { Deck } from "@/Components/Service/DB/models/deck";
+import { Settings } from "@/Components/Service/DB/models/settings";
 
 export default class StartPracticeModal extends HTMLElement {
   static props = {
@@ -24,6 +25,7 @@ export default class StartPracticeModal extends HTMLElement {
   private $timerCheckbox: HTMLElement | null = null;
   private $availableCardsText: HTMLElement | null = null;
   private db = openDatabase();
+  private settings: Settings | null = null;
 
   constructor(props: StartPracticeModalProps) {
     super();
@@ -54,9 +56,19 @@ export default class StartPracticeModal extends HTMLElement {
         this.open = true;
       }
     });
+
+    eventManager.subscribe("settings:updated", async () => {
+      await this.loadSettings();
+      await this.update();
+    });
+  }
+
+  async loadSettings() {
+    this.settings = await this.db.get("settings", "settings");
   }
 
   async init() {
+    await this.loadSettings();
     const fragment = await this.getTemplate();
     this.appendChild(fragment);
   }
@@ -134,22 +146,66 @@ export default class StartPracticeModal extends HTMLElement {
     this.updateAvailableCardsUI();
   }
 
+  // Check if all available cards have translations for the selected language
+  private checkCardsHaveTranslations(): {
+    allHaveTranslations: boolean;
+    cardsWithoutTranslation: Card[];
+  } {
+    if (!this.settings) {
+      return { allHaveTranslations: true, cardsWithoutTranslation: [] };
+    }
+
+    const lang = this.settings.selectedLanguage;
+    const cardsWithoutTranslation = this.availableCards.filter((card) => {
+      const translation = card.translation?.[lang] ?? "";
+      return !translation || translation.trim().length === 0;
+    });
+
+    return {
+      allHaveTranslations: cardsWithoutTranslation.length === 0,
+      cardsWithoutTranslation,
+    };
+  }
+
   private updateAvailableCardsUI() {
     if (this.$availableCardsText) {
       const count = this.availableCards.length;
       const isRandom = this._deck?.id === -1;
       const displayCount = isRandom ? Math.min(count, 20) : count;
 
-      let displayText = `${displayCount} ${
-        displayCount === 1 ? "carta disponible" 
-        : displayCount === 0 ? "cartas disponibles. Selecciona una difficultad más baja para practicar."
-        : "cartas disponibles"
+      // Check for missing translations
+      const { allHaveTranslations, cardsWithoutTranslation } =
+        this.checkCardsHaveTranslations();
 
-      }`;
+      let displayText = "";
+      let hasError = false;
+
+      if (displayCount === 0) {
+        displayText =
+          "0 cartas disponibles. Selecciona una difficultad más baja para practicar.";
+        hasError = true;
+      } else if (!allHaveTranslations) {
+        const missingCount = cardsWithoutTranslation.length;
+        displayText = `${displayCount} ${
+          displayCount === 1 ? "carta disponible" : "cartas disponibles"
+        }, pero ${missingCount} ${
+          missingCount === 1 ? "carta no tiene" : "cartas no tienen"
+        } traducción en el idioma seleccionado. Por favor, edita ${
+          missingCount === 1 ? "la carta" : "las cartas"
+        } para añadir ${
+          missingCount === 1 ? "la traducción" : "las traducciones"
+        }.`;
+        hasError = true;
+      } else {
+        displayText = `${displayCount} ${
+          displayCount === 1 ? "carta disponible" : "cartas disponibles"
+        }`;
+      }
 
       this.$availableCardsText.textContent = displayText;
-      // Update text color based on availability
-      if (displayCount === 0) {
+
+      // Update text color based on availability and translation status
+      if (hasError) {
         this.$availableCardsText.classList.add("text-red-500");
         this.$availableCardsText.classList.remove("text-font-secondary");
       } else {
@@ -239,6 +295,12 @@ export default class StartPracticeModal extends HTMLElement {
   startPractice() {
     // Don't allow starting if no cards are available
     if (this.availableCards.length === 0) {
+      return;
+    }
+
+    // Check if all cards have translations
+    const { allHaveTranslations } = this.checkCardsHaveTranslations();
+    if (!allHaveTranslations) {
       return;
     }
 

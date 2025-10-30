@@ -111,6 +111,9 @@ export default class Flashcard extends HTMLElement {
     const translation = card.translation?.[lang] ?? "";
     const example = card.exampleSentence?.[lang] ?? "";
     const notes = card.notes ?? "";
+    
+    // Check if translation exists for this language
+    const hasTranslation = translation && translation.trim().length > 0;
 
     // Difficulty colors and emojis
     const difficultyConfig = {
@@ -205,7 +208,7 @@ export default class Flashcard extends HTMLElement {
             style="backface-visibility: hidden;"
           >
             <!-- Progress visualizer in top-right (front face only) -->
-            ${this.$progressViz
+            ${this.$progressViz && hasTranslation
               ? html`<div
                   class="absolute top-2 right-2 z-10 scale-50 origin-top-right"
                   style="backface-visibility: hidden;"
@@ -214,28 +217,41 @@ export default class Flashcard extends HTMLElement {
                 </div>`
               : ""}
             <div class="flex-1 flex flex-col min-h-0">
-              <div
-                class="text-2xl font-semibold text-font-primary flex items-center gap-2"
-              >
-                <span>${translation}</span>
-                ${difficultyEmoji
-                  ? html`<span class="text-2xl">${difficultyEmoji}</span>`
-                  : ""}
-              </div>
-              ${example
-                ? html`<div
-                    class="mt-3 text-base text-font-secondary italic line-clamp-3"
-                  >
-                    ${example}
-                  </div>`
-                : ""}
-              ${notes
-                ? html`<div
-                    class="fc-notes-panel mt-3 p-3 rounded bg-white bg-opacity-60 text-sm text-font-secondary hidden overflow-auto"
-                  >
-                    ${notes}
-                  </div>`
-                : ""}
+              ${hasTranslation
+                ? html`
+                    <div
+                      class="text-2xl font-semibold text-font-primary flex items-center gap-2"
+                    >
+                      <span>${translation}</span>
+                      ${difficultyEmoji
+                        ? html`<span class="text-2xl">${difficultyEmoji}</span>`
+                        : ""}
+                    </div>
+                    ${example
+                      ? html`<div
+                          class="mt-3 text-base text-font-secondary italic line-clamp-3"
+                        >
+                          ${example}
+                        </div>`
+                      : ""}
+                    ${notes
+                      ? html`<div
+                          class="fc-notes-panel mt-3 p-3 rounded bg-white bg-opacity-60 text-sm text-font-secondary hidden overflow-auto"
+                        >
+                          ${notes}
+                        </div>`
+                      : ""}
+                  `
+                : html`
+                    <div class="flex flex-col items-start justify-center h-full gap-3">
+                      <div class="text-lg text-font-secondary text-left">
+                        No hay traducción disponible para este idioma
+                      </div>
+                      <div class="text-sm text-font-secondary text-left italic">
+                        Por favor, edita la carta para añadir una traducción
+                      </div>
+                    </div>
+                  `}
             </div>
 
             <!-- Bottom section with buttons -->

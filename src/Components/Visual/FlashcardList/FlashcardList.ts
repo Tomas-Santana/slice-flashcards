@@ -4,6 +4,7 @@ import type Flashcard from "@/Components/Visual/Flashcard/Flashcard";
 import type SmallFlashcard from "@/Components/Visual/SmallFlashcard/SmallFlashcard";
 import type Selectable from "@/Components/Visual/Selectable/Selectable";
 import html from "@/lib/render";
+import { LanguageCode } from "@/lib/types/languages";
 
 export default class FlashcardList extends HTMLElement {
   static props = {
@@ -23,7 +24,6 @@ export default class FlashcardList extends HTMLElement {
   constructor(props: FlashcardListProps) {
     super();
     // @ts-ignore controller at runtime
-    slice.controller.setComponentProps(this, props);
     this.props = props;
     this.cards = props.cards || [];
   }
@@ -117,6 +117,11 @@ export default class FlashcardList extends HTMLElement {
     const cardElement = await this.buildCard(card);
     this.$flashcardElements.push(cardElement);
     cardsContainer.appendChild(cardElement);
+  }
+
+  setFrontLanguage(lang: LanguageCode) {
+    this.props.frontLanguage = lang;
+    this.update();
   }
 
   // Public method to update a card in the list

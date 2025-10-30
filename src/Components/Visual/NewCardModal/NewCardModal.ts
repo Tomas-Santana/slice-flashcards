@@ -56,11 +56,15 @@ export default class NewCardModal extends HTMLElement {
         this.$dialog!.open = true;
       }
     );
+    eventManager.subscribe("settings:updated", async () => {
+      await this.loadSettings();
+      await this.update();
+    });
   }
 
   async init() {
     // Component initialization logic (can be async)
-    this.settings = await this.db.get("settings", "settings");
+    await this.loadSettings();
     const fragment = await this.getTemplate();
     this.appendChild(fragment);
   }
@@ -68,6 +72,9 @@ export default class NewCardModal extends HTMLElement {
     const fragment = await this.getTemplate();
     this.innerHTML = "";
     this.appendChild(fragment);
+  }
+  async loadSettings() {
+    this.settings = await this.db.get("settings", "settings");
   }
 
   async getTemplate() {
