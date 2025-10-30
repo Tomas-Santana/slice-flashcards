@@ -51,5 +51,14 @@ const components = {
   "NewDeckModal": "Visual",
   "SmallFlashcard": "Visual",
   "DeckList": "Visual",
+  "Tester": "AppComponents",
+  "PracticeCountDown": "Visual",
+  "CardCarousel": "Visual",
+  "PracticeAnswerForm": "Visual",
+  "AnswerFeedback": "Visual",
+  "PracticeEndFeedback": "Visual",
+  "PracticeTimer": "Visual",
+  "ProgressVisualizer": "Visual",
+  "CardFilterForm": "Visual",
 };
 export default components;

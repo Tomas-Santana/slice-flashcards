@@ -1,9 +1,12 @@
 // AUTO-GENERATED FILE. Do not edit manually.
 // Updated by src/scripts/createComponent.js
+import type { AnswerFeedbackProps } from './Components/Visual/AnswerFeedback/AnswerFeedback.types';
 import type { AudioPlayerProps } from './Components/Visual/AudioPlayer/AudioPlayer.types';
 import type { AudioRecorderProps } from './Components/Visual/AudioRecorder/AudioRecorder.types';
 import type { ButtonProps } from './Components/Visual/Button/Button.types';
 import type { CardAudioComboProps } from './Components/Visual/CardAudioCombo/CardAudioCombo.types';
+import type { CardCarouselProps } from './Components/Visual/CardCarousel/CardCarousel.types';
+import type { CardFilterFormProps } from './Components/Visual/CardFilterForm/CardFilterForm.types';
 import type { DeckCardProps } from './Components/Visual/DeckCard/DeckCard.types';
 import type { DeckListProps } from './Components/Visual/DeckList/DeckList.types';
 import type { DialogProps } from './Components/Visual/Dialog/Dialog.types';
@@ -16,6 +19,11 @@ import type { MultiRouteProps } from './Components/Visual/MultiRoute/MultiRoute.
 import type { NewCardModalProps } from './Components/Visual/NewCardModal/NewCardModal.types';
 import type { NewDeckModalProps } from './Components/Visual/NewDeckModal/NewDeckModal.types';
 import type { PageTitleProps } from './Components/Visual/PageTitle/PageTitle.types';
+import type { PracticeAnswerFormProps } from './Components/Visual/PracticeAnswerForm/PracticeAnswerForm.types';
+import type { PracticeCountDownProps } from './Components/Visual/PracticeCountDown/PracticeCountDown.types';
+import type { PracticeEndFeedbackProps } from './Components/Visual/PracticeEndFeedback/PracticeEndFeedback.types';
+import type { PracticeTimerProps } from './Components/Visual/PracticeTimer/PracticeTimer.types';
+import type { ProgressVisualizerProps } from './Components/Visual/ProgressVisualizer/ProgressVisualizer.types';
 import type { SButtonProps } from './Components/Visual/SButton/SButton.types';
 import type { SButtonSelectProps } from './Components/Visual/SButtonSelect/SButtonSelect.types';
 import type { SelectProps } from './Components/Visual/Select/Select.types';
@@ -30,10 +38,14 @@ import type { SToggleButtonProps } from './Components/Visual/SToggleButton/STogg
 import type { FlashcardsPageProps } from './Components/AppComponents/FlashcardsPage/FlashcardsPage.types';
 import type { PracticePageProps } from './Components/AppComponents/PracticePage/PracticePage.types';
 import type { StartPageProps } from './Components/AppComponents/StartPage/StartPage.types';
+import type { TesterProps } from './Components/AppComponents/Tester/Tester.types';
+import type AnswerFeedback from './Components/Visual/AnswerFeedback/AnswerFeedback';
 import type AudioPlayer from './Components/Visual/AudioPlayer/AudioPlayer';
 import type AudioRecorder from './Components/Visual/AudioRecorder/AudioRecorder';
 import type Button from './Components/Visual/Button/Button';
 import type CardAudioCombo from './Components/Visual/CardAudioCombo/CardAudioCombo';
+import type CardCarousel from './Components/Visual/CardCarousel/CardCarousel';
+import type CardFilterForm from './Components/Visual/CardFilterForm/CardFilterForm';
 import type DeckCard from './Components/Visual/DeckCard/DeckCard';
 import type DeckList from './Components/Visual/DeckList/DeckList';
 import type Dialog from './Components/Visual/Dialog/Dialog';
@@ -46,6 +58,11 @@ import type MultiRoute from './Components/Visual/MultiRoute/MultiRoute';
 import type NewCardModal from './Components/Visual/NewCardModal/NewCardModal';
 import type NewDeckModal from './Components/Visual/NewDeckModal/NewDeckModal';
 import type PageTitle from './Components/Visual/PageTitle/PageTitle';
+import type PracticeAnswerForm from './Components/Visual/PracticeAnswerForm/PracticeAnswerForm';
+import type PracticeCountDown from './Components/Visual/PracticeCountDown/PracticeCountDown';
+import type PracticeEndFeedback from './Components/Visual/PracticeEndFeedback/PracticeEndFeedback';
+import type PracticeTimer from './Components/Visual/PracticeTimer/PracticeTimer';
+import type ProgressVisualizer from './Components/Visual/ProgressVisualizer/ProgressVisualizer';
 import type SButton from './Components/Visual/SButton/SButton';
 import type SButtonSelect from './Components/Visual/SButtonSelect/SButtonSelect';
 import type Select from './Components/Visual/Select/Select';
@@ -62,15 +79,19 @@ import type FlashcardsPage from './Components/AppComponents/FlashcardsPage/Flash
 import type HomePage from './Components/AppComponents/HomePage/HomePage';
 import type PracticePage from './Components/AppComponents/PracticePage/PracticePage';
 import type StartPage from './Components/AppComponents/StartPage/StartPage';
+import type Tester from './Components/AppComponents/Tester/Tester';
 
-export type ComponentName = 'AudioPlayer' | 'AudioRecorder' | 'Button' | 'Card' | 'CardAudioCombo' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'DeckList' | 'Details' | 'Dialog' | 'DropDown' | 'FileInput' | 'Flashcard' | 'FlashcardList' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NewDeckModal' | 'NotFound' | 'PageTitle' | 'Route' | 'SButton' | 'SButtonSelect' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'SmallFlashcard' | 'StartPracticeModal' | 'SToggleButton' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage';
+export type ComponentName = 'AnswerFeedback' | 'AudioPlayer' | 'AudioRecorder' | 'Button' | 'Card' | 'CardAudioCombo' | 'CardCarousel' | 'CardFilterForm' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'DeckList' | 'Details' | 'Dialog' | 'DropDown' | 'FileInput' | 'Flashcard' | 'FlashcardList' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NewDeckModal' | 'NotFound' | 'PageTitle' | 'PracticeAnswerForm' | 'PracticeCountDown' | 'PracticeEndFeedback' | 'PracticeTimer' | 'ProgressVisualizer' | 'Route' | 'SButton' | 'SButtonSelect' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'SmallFlashcard' | 'StartPracticeModal' | 'SToggleButton' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage' | 'Tester';
 
 export type ComponentPropsMap = {
+  'AnswerFeedback': AnswerFeedbackProps,
   'AudioPlayer': AudioPlayerProps,
   'AudioRecorder': AudioRecorderProps,
   'Button': ButtonProps,
   'Card': any,
   'CardAudioCombo': CardAudioComboProps,
+  'CardCarousel': CardCarouselProps,
+  'CardFilterForm': CardFilterFormProps,
   'Checkbox': any,
   'CodeVisualizer': any,
   'DeckCard': DeckCardProps,
@@ -93,6 +114,11 @@ export type ComponentPropsMap = {
   'NewDeckModal': NewDeckModalProps,
   'NotFound': any,
   'PageTitle': PageTitleProps,
+  'PracticeAnswerForm': PracticeAnswerFormProps,
+  'PracticeCountDown': PracticeCountDownProps,
+  'PracticeEndFeedback': PracticeEndFeedbackProps,
+  'PracticeTimer': PracticeTimerProps,
+  'ProgressVisualizer': ProgressVisualizerProps,
   'Route': any,
   'SButton': SButtonProps,
   'SButtonSelect': SButtonSelectProps,
@@ -116,15 +142,19 @@ export type ComponentPropsMap = {
   'HomePage': any,
   'Playground': any,
   'PracticePage': PracticePageProps,
-  'StartPage': StartPageProps
+  'StartPage': StartPageProps,
+  'Tester': TesterProps
 };
 
 export type ComponentInstanceMap = {
+  'AnswerFeedback': AnswerFeedback,
   'AudioPlayer': AudioPlayer,
   'AudioRecorder': AudioRecorder,
   'Button': Button,
   'Card': any,
   'CardAudioCombo': CardAudioCombo,
+  'CardCarousel': CardCarousel,
+  'CardFilterForm': CardFilterForm,
   'Checkbox': any,
   'CodeVisualizer': any,
   'DeckCard': DeckCard,
@@ -147,6 +177,11 @@ export type ComponentInstanceMap = {
   'NewDeckModal': NewDeckModal,
   'NotFound': any,
   'PageTitle': PageTitle,
+  'PracticeAnswerForm': PracticeAnswerForm,
+  'PracticeCountDown': PracticeCountDown,
+  'PracticeEndFeedback': PracticeEndFeedback,
+  'PracticeTimer': PracticeTimer,
+  'ProgressVisualizer': ProgressVisualizer,
   'Route': any,
   'SButton': SButton,
   'SButtonSelect': SButtonSelect,
@@ -170,5 +205,6 @@ export type ComponentInstanceMap = {
   'HomePage': HomePage,
   'Playground': any,
   'PracticePage': PracticePage,
-  'StartPage': StartPage
+  'StartPage': StartPage,
+  'Tester': Tester
 };
