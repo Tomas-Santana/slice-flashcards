@@ -4,6 +4,7 @@ import { openDatabase } from "@/Components/Service/DB/openDatabase";
 import { AudioAsset } from "@/Components/Service/DB/models/audio";
 import eventManager from "@/Components/Service/EventManager/EventManager";
 import type SButton from "../SButton/SButton";
+import type ProgressVisualizer from "../ProgressVisualizer/ProgressVisualizer";
 
 export default class Flashcard extends HTMLElement {
   static props = {
@@ -22,6 +23,7 @@ export default class Flashcard extends HTMLElement {
   private $audioEl: HTMLAudioElement | null = null;
   private $playBtn: SButton | null = null;
   private $editBtn: SButton | null = null;
+  private $progressViz: ProgressVisualizer | null = null;
 
   constructor(props: FlashcardProps) {
     super();
@@ -33,6 +35,8 @@ export default class Flashcard extends HTMLElement {
 
   async init() {
     this.setAttribute("data-card-id", this.props.card.id.toString());
+    // Ensure the custom element displays inline-block to respect child dimensions
+    this.classList.add("w-96", "h-64", "inline-block");
     await this.render();
   }
 
@@ -103,7 +107,6 @@ export default class Flashcard extends HTMLElement {
 
   async getTemplate() {
     const card = this.props.card;
-    console.log("Flashcard card:", card.originalText, card.audioAssetId);
     const lang = this.props.frontLanguage;
     const translation = card.translation?.[lang] ?? "";
     const example = card.exampleSentence?.[lang] ?? "";
@@ -184,14 +187,32 @@ export default class Flashcard extends HTMLElement {
           })
         : null;
 
+    // Build progress visualizer if needed
+    if (this.props.showProgress) {
+      const progressScore = card.progressScore?.[lang] ?? 0;
+      this.$progressViz = await window.slice.build("ProgressVisualizer", {
+        progress: progressScore,
+      });
+    }
+
     // Build the card body with fixed dimensions
     const cardFrag = html`
-      <div class="fc-outer">
+      <div class="fc-outer w-96 h-64 inline-block">
         <div class="fc-inner rounded shadow border bg-white w-96 h-64">
           <!-- Front face -->
           <div
-            class="fc-face fc-front p-6 flex flex-col h-full ${difficultyColor}"
+            class="fc-face fc-front p-6 flex flex-col h-full ${difficultyColor} relative"
+            style="backface-visibility: hidden;"
           >
+            <!-- Progress visualizer in top-right (front face only) -->
+            ${this.$progressViz
+              ? html`<div
+                  class="absolute top-2 right-2 z-10 scale-50 origin-top-right"
+                  style="backface-visibility: hidden;"
+                >
+                  ${this.$progressViz}
+                </div>`
+              : ""}
             <div class="flex-1 flex flex-col min-h-0">
               <div
                 class="text-2xl font-semibold text-font-primary flex items-center gap-2"
@@ -276,6 +297,12 @@ export default class Flashcard extends HTMLElement {
           this._audioUrl = URL.createObjectURL(this.audioAsset.blob);
         } catch {}
       }
+    }
+  }
+
+  flip() {
+    if (this.$inner) {
+      this.$inner.classList.toggle("fc-flipped");
     }
   }
 

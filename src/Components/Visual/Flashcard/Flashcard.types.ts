@@ -6,6 +6,7 @@ export interface FlashcardProps {
   frontLanguage: LanguageCode;
   showFlipButton?: boolean;
   showEditButton?: boolean;
+  showProgress?: boolean;
   selectable?: boolean;
   onSelectChange?: (selected: boolean) => void;
 }
