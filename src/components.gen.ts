@@ -14,6 +14,7 @@ import type { FileInputProps } from './Components/Visual/FileInput/FileInput.typ
 import type { FlashcardProps } from './Components/Visual/Flashcard/Flashcard.types';
 import type { FlashcardListProps } from './Components/Visual/FlashcardList/FlashcardList.types';
 import type { InputProps } from './Components/Visual/Input/Input.types';
+import type { LanguageSelectProps } from './Components/Visual/LanguageSelect/LanguageSelect.types';
 import type { LogoProps } from './Components/Visual/Logo/Logo.types';
 import type { MultiRouteProps } from './Components/Visual/MultiRoute/MultiRoute.types';
 import type { NewCardModalProps } from './Components/Visual/NewCardModal/NewCardModal.types';
@@ -53,6 +54,7 @@ import type FileInput from './Components/Visual/FileInput/FileInput';
 import type Flashcard from './Components/Visual/Flashcard/Flashcard';
 import type FlashcardList from './Components/Visual/FlashcardList/FlashcardList';
 import type Input from './Components/Visual/Input/Input';
+import type LanguageSelect from './Components/Visual/LanguageSelect/LanguageSelect';
 import type Logo from './Components/Visual/Logo/Logo';
 import type MultiRoute from './Components/Visual/MultiRoute/MultiRoute';
 import type NewCardModal from './Components/Visual/NewCardModal/NewCardModal';
@@ -81,7 +83,7 @@ import type PracticePage from './Components/AppComponents/PracticePage/PracticeP
 import type StartPage from './Components/AppComponents/StartPage/StartPage';
 import type Tester from './Components/AppComponents/Tester/Tester';
 
-export type ComponentName = 'AnswerFeedback' | 'AudioPlayer' | 'AudioRecorder' | 'Button' | 'Card' | 'CardAudioCombo' | 'CardCarousel' | 'CardFilterForm' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'DeckList' | 'Details' | 'Dialog' | 'DropDown' | 'FileInput' | 'Flashcard' | 'FlashcardList' | 'Grid' | 'Icon' | 'Input' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NewDeckModal' | 'NotFound' | 'PageTitle' | 'PracticeAnswerForm' | 'PracticeCountDown' | 'PracticeEndFeedback' | 'PracticeTimer' | 'ProgressVisualizer' | 'Route' | 'SButton' | 'SButtonSelect' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'SmallFlashcard' | 'StartPracticeModal' | 'SToggleButton' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage' | 'Tester';
+export type ComponentName = 'AnswerFeedback' | 'AudioPlayer' | 'AudioRecorder' | 'Button' | 'Card' | 'CardAudioCombo' | 'CardCarousel' | 'CardFilterForm' | 'Checkbox' | 'CodeVisualizer' | 'DeckCard' | 'DeckList' | 'Details' | 'Dialog' | 'DropDown' | 'FileInput' | 'Flashcard' | 'FlashcardList' | 'Grid' | 'Icon' | 'Input' | 'LanguageSelect' | 'Layout' | 'Loading' | 'Logo' | 'MultiRoute' | 'Navbar' | 'NewCardModal' | 'NewDeckModal' | 'NotFound' | 'PageTitle' | 'PracticeAnswerForm' | 'PracticeCountDown' | 'PracticeEndFeedback' | 'PracticeTimer' | 'ProgressVisualizer' | 'Route' | 'SButton' | 'SButtonSelect' | 'Select' | 'Selectable' | 'SIcon' | 'Sidebar' | 'SidebarLink' | 'SidebarToggle' | 'SmallFlashcard' | 'StartPracticeModal' | 'SToggleButton' | 'Switch' | 'TreeItem' | 'TreeView' | 'EventManager' | 'FetchManager' | 'Link' | 'LocalStorageManager' | 'Translator' | 'FlashcardsPage' | 'HomePage' | 'Playground' | 'PracticePage' | 'StartPage' | 'Tester';
 
 export type ComponentPropsMap = {
   'AnswerFeedback': AnswerFeedbackProps,
@@ -105,6 +107,7 @@ export type ComponentPropsMap = {
   'Grid': any,
   'Icon': any,
   'Input': InputProps,
+  'LanguageSelect': LanguageSelectProps,
   'Layout': any,
   'Loading': any,
   'Logo': LogoProps,
@@ -168,6 +171,7 @@ export type ComponentInstanceMap = {
   'Grid': any,
   'Icon': any,
   'Input': Input,
+  'LanguageSelect': LanguageSelect,
   'Layout': any,
   'Loading': any,
   'Logo': Logo,

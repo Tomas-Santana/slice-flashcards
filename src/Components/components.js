@@ -60,5 +60,6 @@ const components = {
   "PracticeTimer": "Visual",
   "ProgressVisualizer": "Visual",
   "CardFilterForm": "Visual",
+  "LanguageSelect": "Visual",
 };
 export default components;
