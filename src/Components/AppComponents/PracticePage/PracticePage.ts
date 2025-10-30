@@ -86,7 +86,9 @@ export default class PracticePage extends HTMLElement {
     const cardsSection = await window.slice.build("FlashcardsPage", {});
     const fragment = html`
       <div class="p-4">
-        ${pageTitle} ${newDeckModal}
+      <div class="flex items-center justify-between">
+      ${pageTitle} ${newDeckModal}
+      </div>
         <div class="flex gap-4 mt-4 overflow-x-scroll pb-4">
           ${this.$deckList}
         </div>
