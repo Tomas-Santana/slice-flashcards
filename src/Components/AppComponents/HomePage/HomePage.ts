@@ -3,7 +3,6 @@ import { html } from "@/lib/render";
 const sidebarRoutes = [
   { name: "Practicar", path: "/" },
   { name: "Mis cartas y mazos", path: "/flashcards" },
-  { name: "Configuración", path: "/settings" },
 ];
 
 export default class HomePage extends HTMLElement {
