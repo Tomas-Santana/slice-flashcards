@@ -191,6 +191,7 @@ export default class NewDeckModal extends HTMLElement {
     const triggerButton = await window.slice.build("Button", {
       value: this.props.triggerLabel,
       onClickCallback: () => {
+        this.resetFormFields();
         this.$dialog!.open = true;
       },
     });

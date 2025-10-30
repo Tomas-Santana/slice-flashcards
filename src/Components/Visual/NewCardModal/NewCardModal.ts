@@ -45,7 +45,7 @@ export default class NewCardModal extends HTMLElement {
 
     eventManager.subscribe(
       "modal:newCard:open",
-      async (data: { cardId?: number }) => {
+      async (data) => {
         if (data?.cardId) {
           // Edit mode: load card data
           await this.loadCard(data.cardId);
@@ -200,7 +200,7 @@ export default class NewCardModal extends HTMLElement {
     const triggerButton = await window.slice.build("Button", {
       value: this.props.triggerLabel,
       onClickCallback: () => {
-        this.$dialog.open = true;
+        eventManager.publish("modal:newCard:open", { });  
       },
     });
 
