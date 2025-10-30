@@ -19,6 +19,8 @@ export interface Card {
   progressScore?: Record<LanguageCode, number>; // 0..1 for dashboard progress
 
   repetitions?: Record<LanguageCode, number>; // successful reviews in a row
+  totalAttempts?: Record<LanguageCode, number>; // total review attempts
+  totalSuccesses?: Record<LanguageCode, number>; // total successful reviews
   lastReviewedAt?: Record<LanguageCode, Date>;
 
   // Timestamps
