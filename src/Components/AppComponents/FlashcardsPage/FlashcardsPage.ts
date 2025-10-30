@@ -5,6 +5,7 @@ import type { Card } from "@/Components/Service/DB/models/card";
 import eventManager from "@/Components/Service/EventManager/EventManager";
 import { Settings } from "@/Components/Service/DB/models/settings";
 import type FlashcardList from "@/Components/Visual/FlashcardList/FlashcardList";
+import { FilterCriteria } from "@/lib/types/filter";
 
 export default class FlashcardsPage extends HTMLElement {
   static props = {
@@ -81,12 +82,18 @@ export default class FlashcardsPage extends HTMLElement {
       triggerLabel: "Nueva carta",
     });
 
-    const searchInput = await window.slice.build("Input", {
-      placeholder: "Buscar cartas...",
-      onChange: (value: string) => {
-        // Logic to handle search input change
+    // const searchInput = await window.slice.build("Input", {
+    //   placeholder: "Buscar cartas...",
+    //   onChange: (value: string) => {
+    //     // Logic to handle search input change
+    //   },
+    //   type: "search",
+    // });
+
+    const filterForm = await window.slice.build("CardFilterForm", {
+      onFilterChange: (criteria) => {
+        this.filterCards(criteria);
       },
-      type: "search",
     });
 
     this.$flashcardList = await window.slice.build("FlashcardList", {
@@ -94,6 +101,7 @@ export default class FlashcardsPage extends HTMLElement {
       frontLanguage: this.settings.selectedLanguage,
       showFlipButton: true,
       showEditButton: true,
+      showProgress: true,
       onCardSelected: (cardId: number, selected: boolean) => {
         console.log(`Card ${cardId} selected: ${selected}`);
       }
@@ -104,13 +112,51 @@ export default class FlashcardsPage extends HTMLElement {
         <div class="flex justify-between items-center w-full">
           <div>${pageTitle}</div>
           <div class="flex items-center gap-2">
-            ${searchInput} ${newCardModal}
+              ${filterForm} ${newCardModal}
           </div>
         </div>
 
         ${this.$flashcardList}
       </div>
     `;
+  }
+
+  filterCards(criteria: FilterCriteria) {
+    let filteredCards = [...this.cards];
+
+    // Filter by difficulty bands
+    if (criteria.difficultyBands.length > 0) {
+      filteredCards = filteredCards.filter(card =>
+        criteria.difficultyBands.includes(card.difficulty)
+      );
+    }
+
+    // Filter by search term
+    if (criteria.searchTerm && criteria.searchTerm.trim() !== "") {
+      const searchTermLower = criteria.searchTerm.toLowerCase();
+      filteredCards = filteredCards.filter(card => {
+        const frontMatch = card.translation[this.settings.selectedLanguage]
+          .toLowerCase()
+          .includes(searchTermLower);
+        const backMatch = card.originalText
+          .toLowerCase()
+          .includes(searchTermLower);
+        if (criteria.searchFor === 'front') {
+          return frontMatch;
+        } else if (criteria.searchFor === 'back') {
+          return backMatch;
+        } else {
+          return frontMatch || backMatch;
+        }
+      });
+    }
+
+    // Update flashcard list
+    //sort by createdAt descending
+    filteredCards.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    if (this.$flashcardList) {
+      this.$flashcardList.setCards(filteredCards);
+    }
   }
 }
 
