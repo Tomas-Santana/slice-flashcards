@@ -5,7 +5,11 @@ export default class Dialog extends HTMLElement {
   static props = {
     // Define your component props here (runtime schema)
   };
-  props: DialogProps;
+  props: DialogProps = {
+    content: [],
+    onClose: () => {},
+    startingState: "closed",
+  };
 
   private $dialog: HTMLDialogElement | null = null;
 
@@ -16,6 +20,14 @@ export default class Dialog extends HTMLElement {
     // @ts-ignore controller at runtime
     slice.controller.setComponentProps(this, props);
     this.props = props;
+  }
+
+  connectedCallback() {
+    if (this.props.startingState === "open") {
+      if (this.$dialog) {
+        this.open = true;
+      }
+    }
   }
 
   init() {
